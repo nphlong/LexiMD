@@ -15,4 +15,8 @@ export const copy = {
   cancel: 'Cancel',
   deleteTitle: 'Delete this note?',
   deleteBody: 'This removes it from this phone.',
+  write: 'Write',
+  preview: 'Preview',
+  diagramError: 'This diagram has a syntax error.',
+  previewFailed: 'The preview could not open.',
 };

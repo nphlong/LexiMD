@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { copy } from '../copy';
 import { NoteStore } from '../notes/store';
 import { titleFromBody } from '../notes/title';
+import { previewLayout } from '../preview/layout';
+import { PreviewPane } from '../preview/PreviewPane';
 
 type Props = {
   store: NoteStore;
@@ -16,7 +18,12 @@ export function EditorScreen({ store, noteId, onBack }: Props) {
   const [body, setBody] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState<'write' | 'preview'>('write');
   const pending = useRef<Promise<void>>(Promise.resolve());
+  const { width } = useWindowDimensions();
+  const layout = previewLayout(width);
+  const showEditor = layout === 'split' || mode === 'write';
+  const showPreview = layout === 'split' || mode === 'preview';
 
   useEffect(() => {
     let cancelled = false;
@@ -92,15 +99,48 @@ export function EditorScreen({ store, noteId, onBack }: Props) {
         </Pressable>
       </View>
       {error ? <Text style={styles.error}>{error}</Text> : null}
+      {layout === 'toggle' ? (
+        <View style={styles.switcher}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{ selected: mode === 'write' }}
+            onPress={() => setMode('write')}
+            style={[styles.switch, mode === 'write' && styles.switchOn]}
+          >
+            <Text style={[styles.switchText, mode === 'write' && styles.switchTextOn]}>{copy.write}</Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{ selected: mode === 'preview' }}
+            onPress={() => setMode('preview')}
+            style={[styles.switch, mode === 'preview' && styles.switchOn]}
+          >
+            <Text style={[styles.switchText, mode === 'preview' && styles.switchTextOn]}>
+              {copy.preview}
+            </Text>
+          </Pressable>
+        </View>
+      ) : null}
       {body === null ? null : (
-        <TextInput
-          autoFocus
-          multiline
-          onChangeText={onChangeText}
-          placeholder={copy.writeNote}
-          style={styles.input}
-          value={body}
-        />
+        <View style={[styles.body, layout === 'split' && styles.split]}>
+          {showEditor ? (
+            <TextInput
+              autoFocus
+              multiline
+              onChangeText={onChangeText}
+              placeholder={copy.writeNote}
+              style={[styles.input, layout === 'split' && styles.inputSplit]}
+              value={body}
+            />
+          ) : null}
+          <View
+            accessibilityElementsHidden={!showPreview}
+            pointerEvents={showPreview ? 'auto' : 'none'}
+            style={showPreview ? styles.preview : styles.previewHidden}
+          >
+            <PreviewPane markdown={body} />
+          </View>
+        </View>
       )}
     </SafeAreaView>
   );
@@ -138,6 +178,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 8,
   },
+  switcher: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingHorizontal: 16,
+    paddingBottom: 8,
+  },
+  switch: {
+    flex: 1,
+    borderRadius: 8,
+    paddingVertical: 8,
+    alignItems: 'center',
+    backgroundColor: '#f2f2f2',
+  },
+  switchOn: {
+    backgroundColor: '#111',
+  },
+  switchText: {
+    color: '#111',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  switchTextOn: {
+    color: '#fff',
+  },
+  body: {
+    flex: 1,
+    position: 'relative',
+  },
+  split: {
+    flexDirection: 'row',
+  },
   input: {
     flex: 1,
     color: '#111',
@@ -146,5 +217,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 24,
     textAlignVertical: 'top',
+  },
+  inputSplit: {
+    borderRightWidth: StyleSheet.hairlineWidth,
+    borderRightColor: '#ddd',
+  },
+  preview: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  previewHidden: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0,
   },
 });

@@ -1,5 +1,12 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
 
+jest.mock('react-native-webview', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  const WebView = (props: object) => React.createElement(View, props);
+  return { __esModule: true, default: WebView, WebView };
+});
+
 import App from './App';
 import { copy, CORE_FUNCTION } from './src/copy';
 import { createMemoryNoteIo } from './src/notes/memoryNoteIo';

@@ -4,11 +4,15 @@
   "main": "index.ts",
   "dependencies": {
     "expo": "~58.0.19",
+    "expo-asset": "~58.0.18",
     "expo-file-system": "~58.0.11",
     "expo-status-bar": "~58.0.4",
+    "markdown-it": "15.0.3",
+    "mermaid": "12.2.0",
     "react": "19.3.0",
     "react-native": "0.88.0",
-    "react-native-safe-area-context": "~5.10.1"
+    "react-native-safe-area-context": "~5.10.1",
+    "react-native-webview": "14.0.1"
   },
   "devDependencies": {
     "@testing-library/react-native": "^14.1.0",
@@ -24,6 +28,7 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
+    "postinstall": "node scripts/bundle-preview.mjs",
     "lint": "expo lint App.tsx index.ts src",
     "test": "jest --ci --watchAll=false",
     "typecheck": "tsc --noEmit"
@@ -32,7 +37,10 @@
     "node": "^22.13.0 || ^24.3.0 || ^26.0.0 || >=27.0.0"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "moduleNameMapper": {
+      "\\.mermaidjs$": "<rootDir>/src/preview/mermaidAssetStub.js"
+    }
   },
   "private": true
 }
