@@ -1,0 +1,134 @@
+# M1 checks. No Expo account, store account, or signing secret is used.
+#
+# This workflow does prove:
+# - ESLint, the hello-screen unit test, and TypeScript
+# - an Android debug APK for arm64-v8a, signed only by the automatic debug keystore
+# - an iOS Simulator .app compiled with CODE_SIGNING_ALLOWED=NO
+#
+# This workflow does not prove:
+# - the app installs or runs on a physical iPhone or Android phone
+# - a device IPA, an App Store archive, or a Play App Bundle
+# - release signing, TestFlight, or Play closed testing
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+      - main
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXPO_NO_TELEMETRY: "1"
+
+jobs:
+  lint-and-test:
+    name: Lint, test, and typecheck
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run typecheck
+
+  android:
+    name: Android debug APK
+    runs-on: ubuntu-24.04
+    needs: lint-and-test
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Install native build tools
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends cmake ninja-build
+      - run: npm ci
+      # compileSdk 36, build-tools 36.0.0, and NDK 27.1.12297006 match
+      # react-native 0.86 (node_modules/react-native/gradle/libs.versions.toml).
+      # JDK 17 matches Expo's current Android toolchain doc.
+      - name: Install Android SDK packages
+        run: |
+          set -euo pipefail
+          if [ -z "${ANDROID_HOME:-}" ]; then
+            ANDROID_HOME="${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}"
+            echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
+          fi
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          test -x "$SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" \
+            "platforms;android-36" \
+            "build-tools;36.0.0" \
+            "ndk;27.1.12297006"
+      - name: Generate the Android project
+        run: npx expo prebuild --platform android --no-install
+      - name: Assemble an arm64 debug APK
+        working-directory: android
+        run: |
+          set -euo pipefail
+          chmod +x ./gradlew
+          ./gradlew :app:assembleDebug -PreactNativeArchitectures=arm64-v8a --no-daemon --stacktrace
+          test -f app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: leximd-android-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 14
+
+  ios:
+    name: iOS Simulator build
+    runs-on: macos-26
+    needs: lint-and-test
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Show Xcode
+        run: xcodebuild -version
+      - name: Generate the iOS project
+        run: npx expo prebuild --platform ios --no-install
+      - name: Install CocoaPods
+        working-directory: ios
+        run: pod install
+        env:
+          LANG: en_US.UTF-8
+      - name: Compile for the iOS Simulator without signing
+        working-directory: ios
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -workspace LexiMD.xcworkspace \
+            -scheme LexiMD \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "generic/platform=iOS Simulator" \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            build
+          test -d build/Build/Products/Debug-iphonesimulator/LexiMD.app
