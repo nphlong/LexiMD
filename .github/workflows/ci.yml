@@ -78,10 +78,14 @@ jobs:
           SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
           test -x "$SDKMANAGER"
           yes | "$SDKMANAGER" --licenses >/dev/null || true
+          # sdkmanager publishes API 37 as platforms;android-37.0. AGP looks up android-37.
           "$SDKMANAGER" \
-            "platforms;android-37" \
+            "platforms;android-37.0" \
             "build-tools;37.0.0" \
             "ndk;27.1.12297006"
+          if [ ! -e "$ANDROID_HOME/platforms/android-37" ]; then
+            ln -s android-37.0 "$ANDROID_HOME/platforms/android-37"
+          fi
       - name: Generate the Android project
         run: npx expo prebuild --platform android --no-install
       - name: Assemble an arm64 debug APK
