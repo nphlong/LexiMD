@@ -6,11 +6,11 @@ LexiMD is a markdown notes app for iOS and Android. The core function, in one se
 
 **Turn a rough note into clean markdown and see it rendered, diagrams included.**
 
-Shipping the app is also practice for a later life-sim game. The release path (signed builds, closed testing, ads, subscriptions, accounts, review, staged rollout, and an update) is part of the product goal. See [PLAN.md](PLAN.md) for sequencing and [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for the store steps.
+The release path is part of shipping this product: signed builds, closed testing, ads, subscriptions, accounts, review, a staged rollout, and updates. See [PLAN.md](PLAN.md) for sequencing and [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for the store steps.
 
 ## People and language
 
-- One person, taking notes on a phone.
+- A person taking notes on a phone. Sharing a note with someone else is a later paid feature, after sync.
 - Interface languages: English and Vietnamese. The device language is used when it is Vietnamese; otherwise English.
 - Notes may be in any language. AI output follows the language of the note.
 - Minimum age 13. The store age questionnaires still have to be answered, and the store rating wins if it comes out stricter. Verify at submission.
@@ -20,7 +20,7 @@ Shipping the app is also practice for a later life-sim game. The release path (s
 
 Works with no account and no network, except where a system share sheet needs one.
 
-- A markdown editor. Split view first: source on one side, rendered preview on the other. WYSIWYG is later and optional.
+- A markdown editor with two modes on one screen. Split view shows the source beside the rendered preview. WYSIWYG edits the rendered note. Both modes read and write the same markdown file.
 - Live preview, including mermaid diagrams. Preview libraries are bundled with the app so a diagram renders offline.
 - Dark mode, with a system setting and an override.
 - Folders and tags, set by the user.
@@ -28,13 +28,13 @@ Works with no account and no network, except where a system share sheet needs on
 - Open, save, and share `.md` files through the system file picker and share sheet.
 - Search by title and tag, on the library screen.
 
-Notes are files on the device. Folders and tags are local metadata. The app has no cloud copy of a note library.
+Through v1.1, notes are files on the device. Folders and tags are local metadata. The app has no cloud copy of a note library until v1.3.
 
 ## Credits
 
 Sign-in is required to hold credits and to run an AI action. Local editing stays available signed out.
 
-Sign-in methods: Apple, Google, and email.
+Sign-in methods: Apple, Google, and email. The same account is what v1.3 uses for backup and sync.
 
 - A rewarded video ad grants 5 credits. The ad is opt-in. Watching it is a choice from the credits screen.
 - The grant is written by the server after AdMob server-side verification. The app does not add credits when the video ends.
@@ -45,7 +45,7 @@ Sign-in methods: Apple, Google, and email.
 
 ## AI actions
 
-The user taps an action. That tap is the only time note text leaves the device.
+The user taps an action. Until sync ships, that tap is the only time note text leaves the device.
 
 | Action | Version | What it does |
 | --- | --- | --- |
@@ -60,59 +60,93 @@ The user taps an action. That tap is the only time note text leaves the device.
 | OCR import | v1.2 | Turns a photo into text, then the user can run Format. |
 | Voice import | v1.2 | Turns speech into text, then the user can run Format. |
 
-v1 uses one AI provider and one cheap model. A second provider is out of scope until cost-per-credit is understood.
+v1 uses one AI provider and one cheap model. A second provider waits until cost-per-credit is understood.
 
 Voice and OCR add microphone, camera, and photo permissions. They wait until v1.2 so the first store review is about the editor, ads, and three text actions.
 
 ## What the server stores
 
-The server stores:
+Through v1.1 the server stores:
 
 - The account (sign-in identity).
 - The credit balance and the credit transactions.
 - For each AI call: the action name, token counts, estimated cost, and a request id.
 - The text of an in-flight AI request, only so a retry with the same request id can return the same result without a second charge. That text is deleted within 24 hours.
 
-The server does not keep a note library. Analytics and crash reports do not contain note text, prompts, or diagram source.
+Through v1.1 the server does not keep a note library. Analytics and crash reports do not contain note text, prompts, or diagram source.
 
 A failed provider call leaves the balance unchanged. A retried request id returns the stored result and does not debit again.
 
+From v1.3, a signed-in user can also store notes on the server for backup and sync. That store is separate from the AI request text. See the sync section below.
+
 ## Privacy rules
 
-- Disclose, in the privacy policy and in the app before the first AI action: notes stay on the device; a tap sends that action's text to our server and then to the named AI provider; the server holds that text only to finish the action and a retry; the server keeps the account and the credit ledger.
+- Disclose, in the privacy policy and in the app before the first AI action: through v1.1, notes stay on the device; a tap sends that action's text to our server and then to the named AI provider; the server holds that text only to finish the action and a retry; the server keeps the account and the credit ledger.
 - Name the provider in the disclosure once the provider is chosen.
 - Check the provider's terms for retention and training use, and pick the opt-out if one exists. Verify when the provider is chosen.
-- Account deletion is inside the app. It deletes the server account, the ledger, and any in-flight request text. Notes stay on the device until the user deletes them there.
+- Account deletion is inside the app. It deletes the server account, the ledger, and any in-flight request text. Through v1.1, notes stay on the device until the user deletes them there.
 - Ads use Google AdMob. EU/UK ad consent is part of the app. Testing starts in Vietnam; ship the consent flow anyway. Whether a Vietnam test device sees the form: verify.
 - Subscriptions, when they exist, use Apple and Google in-app purchase, with restore purchases and the price, period, and renewal terms shown before purchase.
 
+### Sync, from v1.3
+
+Offline-first stays the default. The editor reads and writes the copy on the device. Sync runs when the network is available, for a signed-in user who turns backup on.
+
+Before that release, update the privacy policy, the in-app disclosure, the Apple privacy labels, and the Google Data safety form:
+
+- Notes of a signed-in user who enables backup are stored on the server.
+- Those notes are encrypted at rest. Host-level encryption versus encryption in the application, and who holds the key, is decided at the start of v1.3. Verify what the host provides. A second device on the same account has to be able to read the backup, so a key that exists only on one phone needs a recovery path. Verify that path before building it.
+- Sync sends note text to the note store. It does not send notes to the AI provider. An AI action is still a separate tap.
+- Account deletion removes synced notes as well as the account and the ledger.
+- If two devices change the same note while offline, the app keeps both copies and asks which one to keep. It does not drop one of them silently.
+
+## Collaboration, later and paid
+
+After sync, a subscriber can share a note or a folder with other people. The design is not decided. Open questions, and nothing past them:
+
+- Permissions: view or edit, a note or a folder, and who may invite.
+- Sharing links: who can open one, whether it expires, and whether it works without an account.
+- Conflict resolution when two people edit at once, on top of the two-device sync rule.
+- Moderation and abuse: unwanted shares, block, and report.
+- Privacy: other accounts can read the note, what deletion does to a copy someone else still has, and whether an AI action on a shared note sends text the other person did not tap.
+
 ## Versions
 
-**v1.** Editor, folders and tags, mermaid preview, dark mode, English and Vietnamese, sign-in, rewarded ads to credits, Format, Diagram, Auto-tag, analytics, and crash reporting.
+**v1.** Editor with split view and WYSIWYG, folders and tags, mermaid preview, dark mode, English and Vietnamese, sign-in, rewarded ads to credits, Format, Diagram, Auto-tag, analytics, and crash reporting. Notes stay on the device.
 
 **v1.1.** Subscription and credit packs, restore purchases, and the Table, Summary, Action items, and Tone actions. Shipped as an update through the same store path.
 
 **v1.2.** Auto-link, OCR import, and voice import.
+
+**v1.3.** Cloud backup and cross-device sync for signed-in users. This is its own version because v1.2 already adds camera and microphone permissions, and sync changes what the server stores.
+
+**Later.** Paid collaboration, after sync: share a note or a folder. Design not decided.
 
 ## Decided
 
 - Product name: LexiMD.
 - Platforms: iOS and Android. No web app in this plan.
 - Developer accounts: individual Apple Developer Program and individual Google Play Console. The Play closed-test requirement for personal accounts applies. Start that test as early as a real build exists.
-- Free tier, credit rules, phasing, local notes, server-side AI key, and AdMob server-side verification, as written above.
+- Free tier, credit rules, phasing, local notes through v1.1, server-side AI key, and AdMob server-side verification, as written above.
 - One AI provider at first, a cheap model, per-user daily caps, a global spend ceiling, and cost-per-credit tracking.
 - Mobile stack: React Native with Expo. Decided 2026-10-25.
-- Backend shape: we own the AI proxy and the ad-verification endpoint, the AI key stays server-side, and the ledger is managed Postgres. Decided 2026-10-25.
+- Backend shape: we own the AI proxy and the ad-verification endpoint, the AI key stays server-side, and the ledger is managed Postgres. Decided 2026-10-25. Through v1.1 that service does not keep a note library.
 - Credits: 1 per action, provisional until the ad-payout comparison. Decided 2026-10-25.
+- v1 editor: split view and WYSIWYG on one screen. Decided 2026-10-25.
+- Cloud backup and sync: v1.3, offline-first. Decided 2026-10-25.
+- Collaboration: paid, after sync, design not decided. Decided 2026-10-25.
 
 ## Open
 
-- Hosting vendor, chosen in milestone M4.
-- AI provider and model name, chosen after the spike in milestone M5. No names or prices until that day. Verify the price then.
+- Hosting vendor, chosen in milestone M5.
+- AI provider and model name, chosen after the spike in milestone M6. No names or prices until that day. Verify the price then.
 - Subscription price, needed before v1.1. One monthly subscription and one credit pack, priced from measured cost per credit and a verified store commission.
+- WYSIWYG approach, chosen after a short spike in milestone M4. Verify. No library is named in advance.
+- For v1.3: encryption at rest, who holds the key, and the recovery path. Verify when that work starts.
+- Collaboration design. The questions are listed above.
 
 Details are in [PLAN.md](PLAN.md).
 
 ## Out of scope
 
-Cloud backup and sync, collaboration, a web app, WYSIWYG in v1, more than one AI provider, favorites, a word-count dashboard, an onboarding carousel, and the life-sim game itself.
+A web app, more than one AI provider in v1, favorites, a word-count dashboard, and an onboarding carousel.

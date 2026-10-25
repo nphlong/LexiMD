@@ -9,6 +9,7 @@ LexiMD is in planning. The mobile stack is React Native with Expo, in TypeScript
 - When the owner records a decision, write it into `docs/PLAN.md` and remove the `DECISION NEEDED` mark.
 - M1 is an Expo project with TypeScript, lint, tests, and CI that builds on iOS and Android, and a hello screen. Add no product features in that pull request.
 - Add Expo and Node `.gitignore` entries in the M1 pull request.
+- WYSIWYG is part of v1, in its own milestone after the split-view editor. Do not add it to the M1 hello screen.
 
 ## Secrets
 
@@ -18,8 +19,8 @@ LexiMD is in planning. The mobile stack is React Native with Expo, in TypeScript
 
 ## Product boundaries
 
-- Notes stay on the device. Send note text only when the user taps an AI action.
+- Through v1.1, notes stay on the device. Send note text only when the user taps an AI action. Cloud backup and sync are v1.3, as written in `docs/PLAN.md`. Do not build them earlier.
 - The app does not grant itself credits. A rewarded ad is checked with AdMob server-side verification. A later purchase is checked with the store.
-- Leave features marked cut or deferred in `docs/PLAN.md` out of the build.
+- Leave features marked cut or deferred in `docs/PLAN.md` out of the build. Collaboration is a later paid feature. Do not design or build it before sync.
 - There is no application project in this repo yet. The first code is M1, as written in `docs/PLAN.md`.
 - Do not add third-party code under a license incompatible with a closed-source mobile app. Record the license of each dependency we add.
