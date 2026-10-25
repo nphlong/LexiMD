@@ -33,4 +33,4 @@ coverage/
 *.aab
 *.ipa
 
-# Stack-specific build folders are added after the stack decision in docs/PLAN.md.
+# Expo and Node ignore rules are added in the M1 pull request, with the Expo project.

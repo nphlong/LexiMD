@@ -10,49 +10,22 @@ The design checklist used here has five questions. A shippable MVP is what is le
 4. How many screens? The cap is 7. Over 7, trim.
 5. What unfinished state brings the user back?
 
+## Decided
+
+Recorded 2026-10-25. Long accepted the recommendations.
+
+1. **Mobile stack.** React Native with Expo. Markdown preview and mermaid still render in a WebView. Signed builds later use Expo's build service (EAS).
+2. **Backend and hosting.** We own the AI proxy and the ad-verification endpoint. The AI key stays in that service. The credit ledger is managed Postgres. Hosted auth for Apple, Google, and email is fine. The service does not keep a note library. The exact hosting vendor is chosen in M4 and written here when it is chosen.
+3. **AI provider and model.** Chosen after a short paid spike, not before. The spike is ten real notes, including Vietnamese notes, each asked for clean markdown and for a mermaid diagram. Keep the provider whose cheap model does both and publishes a token price. Verify the price on that day and store the figure in server config. No provider name, model name, or price is written down before the spike. One provider only in v1.
+4. **Credits per action.** 1 credit per action. One rewarded ad grants 5 credits, so one ad covers five actions. Provisional until M6 compares a real ad payout with the cost log. If one ad cannot cover five actions, change this number before M7. Rewarded-ad revenue, including in Vietnam: **verify.** Do not assume an eCPM.
+
 ## Decisions needed
 
-Write the choice under the item. Code milestones wait on the decision they name.
-
-### 1. Mobile stack — DECISION NEEDED
-
-Blocks milestone M1.
-
-**Flutter.** One codebase and a strong mobile UI. Markdown preview and mermaid are JavaScript libraries, so the preview renders in a WebView. The editor text can be a native field.
-
-**React Native with Expo.** One codebase. Those same libraries still render in a WebView. Expo's build service (EAS) produces the signed iOS and Android builds this rehearsal exists to practise.
-
-**Recommendation:** React Native with Expo. The preview is a WebView either way, and the build service matches the release rehearsal. Flutter is a sound choice if you would rather write Dart. This repo assumes neither until the choice is written here.
-
-### 2. Backend and hosting — DECISION NEEDED
-
-Blocks milestone M4.
-
-**A small service you own, plus managed Postgres.** The service is the AI proxy and the ad-verification endpoint. Postgres holds the ledger. A hosted auth product covers Apple, Google, and email. The service language can follow the stack decision.
-
-**An all-in-one platform.** Auth, database, and functions from one vendor.
-
-**Recommendation:** own the proxy and the ad webhook as a small service, with managed Postgres for the ledger. Hosted auth is fine. Keep the AI key in the service environment. A database function the phone can call is the wrong place for that key. Pick the vendor together with the stack. The service does not keep a note library.
-
-### 3. AI provider and model — DECISION NEEDED
-
-Blocks milestone M5. Pricing: **verify** on the provider's site the day you choose. This plan names no model and no price.
-
-**Options:** one chat API from a major provider, on a cheap model. A second provider is out of v1.
-
-**Recommendation:** decide with a short paid spike, ten real notes, including Vietnamese notes, each asked for clean markdown and for a mermaid diagram. Keep the provider whose cheap model does both and publishes a token price. Re-check that price whenever it changes. Store the figure you verified in server config, not in the app.
-
-### 4. Subscription price — DECISION NEEDED before M8
+### Subscription price — DECISION NEEDED before M8
 
 v1 ships with ad credits only, so this can wait.
 
-**Options:** a monthly subscription, a credit pack, or both.
-
-**Recommendation:** in v1.1, sell one monthly subscription and one credit pack. Set the numbers only after M5 has a measured cost per credit, and after you verify the store commission. Both stores take a cut of in-app purchases. The rate depends on the program you qualify for. **Verify.** No price is proposed in this plan.
-
-### 5. Credits charged per action — DECISION NEEDED before M5
-
-**Recommendation:** 1 credit per action. One rewarded ad grants 5 credits, so one ad covers five actions. Treat that number as provisional: M6 compares it with a real rewarded-ad payout, and the cost changes if one ad cannot cover five actions. Rewarded-ad revenue, including in Vietnam: **verify.** Do not assume an eCPM.
+**Approach, accepted 2026-10-25.** In v1.1, sell one monthly subscription and one credit pack. Set the numbers only after M5 has a measured cost per credit, and after you verify the store commission. Both stores take a cut of in-app purchases. The rate depends on the program you qualify for. **Verify.** No price is proposed in this plan.
 
 ## Already decided
 
@@ -163,17 +136,18 @@ Start the store accounts now, in parallel with M1. Enrollment and the Play close
 
 ### M1 — The app boots on a phone
 
-Needs decision 1.
+Stack: React Native with Expo, decided 2026-10-25.
+
+Start with an Expo project in TypeScript. Add lint, tests, and CI that builds on both iOS and Android. The only screen is a hello screen that shows the core-function sentence. No editor, notes, folders, AI, ads, or server in this pull request.
 
 **Done when**
 
-- A debug build installs on one iPhone and one Android phone.
-- It shows the Library empty state, with the core-function sentence on it.
-- There is no AI, no ads, and no server.
+- CI lints, tests, and builds for iOS and Android.
+- A debug build installs on one iPhone and one Android phone and shows that hello screen.
 
 **Rehearses:** the toolchain, and installing a build while in Vietnam.
 
-**You do:** write the stack choice under decision 1. Install the toolchain. Open the app and confirm the empty Library.
+**You do:** Install the toolchain. Open the app and confirm the hello screen.
 
 ### M2 — The core loop works offline
 
@@ -205,7 +179,7 @@ Needs decision 1.
 
 ### M4 — Sign-in and the ledger
 
-Needs decision 2.
+The proxy, the ad-verification endpoint, and managed Postgres are decided. Choose the hosting vendor in this milestone and record it under Decided.
 
 **Done when**
 
@@ -217,11 +191,11 @@ Needs decision 2.
 
 **Rehearses:** a deployed server, auth consoles, Sign in with Apple, and keeping secrets on the server.
 
-**You do:** record the backend choice. Create the auth credentials in the Apple and Google consoles. Keep every secret out of the repo and out of chat. Confirm the starting balance.
+**You do:** pick the hosting vendor and write it into the Decided section. Create the auth credentials in the Apple and Google consoles. Keep every secret out of the repo and out of chat. Confirm the starting balance.
 
 ### M5 — Three AI actions
 
-Needs decisions 3 and 5.
+Run the provider spike from the Decided section, then name the provider and the cheap model here. Each action spends 1 credit.
 
 **Done when**
 
@@ -235,7 +209,7 @@ Needs decisions 3 and 5.
 
 **Rehearses:** a server-side provider key, and cost-per-credit measurement.
 
-**You do:** choose the provider and the cheap model after the spike in decision 3. Set a monthly spend alert on the provider dashboard. Set the two caps. Read one real cost log and confirm the numbers. **Verify** the token price, and whether the provider retains prompts or trains on them.
+**You do:** run the spike, then write the provider and model into the Decided section. Verify the token price that day. Set a monthly spend alert on the provider dashboard. Set the two caps. Read one real cost log and confirm the numbers. Check whether the provider retains prompts or trains on them.
 
 ### M6 — A rewarded ad grants 5 credits
 
@@ -250,7 +224,7 @@ Needs decisions 3 and 5.
 
 **Rehearses:** an AdMob app, a rewarded unit, and server-side verification.
 
-**You do:** create the AdMob app and the verification keys. Watch one test ad end to end. Compare the cost log from M5 with what one test reward represents. If one ad cannot cover five actions, change decision 5 before M7.
+**You do:** create the AdMob app and the verification keys. Watch one test ad end to end. Compare the cost log from M5 with what one test reward represents. If one ad cannot cover five actions, change the 1-credit rule before M7.
 
 ### M7 — v1 submitted, staged rollout started
 
@@ -271,7 +245,7 @@ Needs decisions 3 and 5.
 
 ### M8 — v1.1 update through the same path
 
-Needs decision 4.
+Needs the subscription price from Decisions needed.
 
 **Done when**
 
@@ -315,7 +289,7 @@ Owner tasks. Detail and the Play tester bar are in [RELEASE_CHECKLIST.md](RELEAS
 | One rewarded ad pays less than five AI actions, especially with Vietnam traffic. | Measure in M5 and M6. Change the credit cost or the cap. Ad revenue: **verify.** |
 | Play production stays locked until the personal-account closed test passes. | Start the closed test at M3. Recruit extra testers. The published bar on 2026-10-25 was 12 testers for 14 continuous days, for accounts created after 13 November 2023. **Verify.** |
 | The preview WebView is slow, or review treats the app as a thin wrapper. | Native shell, WebView for preview only, libraries bundled offline. Test on a low-end Android phone. Apple's minimum-functionality rule: **verify.** |
-| The cheap model mishandles Vietnamese or mermaid. | The provider spike in decision 3 uses both. Switch model before M5 if it fails. |
+| The cheap model mishandles Vietnamese or mermaid. | The M5 spike uses both. Switch model before the three actions ship if it fails. |
 | A modified client grants itself credits. | Only a verified ad callback, or a later verified purchase, adds credits. M6 includes a replayed-callback test. |
 | Note text leaks into logs, analytics, or a stored library. | Request text lives for the retry window only. Sample one analytics event and one crash before M7 submission. |
 | The single provider raises prices or goes down. | Daily caps and a dashboard spend alert. Price: **verify** when it changes. |

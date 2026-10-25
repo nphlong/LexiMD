@@ -39,7 +39,7 @@ Sign-in methods: Apple, Google, and email.
 - A rewarded video ad grants 5 credits. The ad is opt-in. Watching it is a choice from the credits screen.
 - The grant is written by the server after AdMob server-side verification. The app does not add credits when the video ends.
 - v1 has no subscription and no credit pack. Those arrive in v1.1.
-- Each AI action spends credits. The planned cost is 1 credit per action, so one ad covers five actions. That number is a decision in [PLAN.md](PLAN.md), confirmed after real cost-per-credit numbers exist.
+- Each AI action spends 1 credit, decided 2026-10-25, so one ad covers five actions. That number is provisional until a real ad payout is compared with the cost log. See [PLAN.md](PLAN.md).
 - Each user has a daily cap. There is also a global daily spend ceiling for the whole service. Both numbers are set when the provider is chosen, from a spend limit the owner configures on the provider dashboard.
 - The server records tokens and an estimated cost on each action. The owner verifies the token price and stores that figure in server config. The app binary does not contain prices. Re-check the price when the provider changes it.
 
@@ -101,10 +101,17 @@ A failed provider call leaves the balance unchanged. A retried request id return
 - Developer accounts: individual Apple Developer Program and individual Google Play Console. The Play closed-test requirement for personal accounts applies. Start that test as early as a real build exists.
 - Free tier, credit rules, phasing, local notes, server-side AI key, and AdMob server-side verification, as written above.
 - One AI provider at first, a cheap model, per-user daily caps, a global spend ceiling, and cost-per-credit tracking.
+- Mobile stack: React Native with Expo. Decided 2026-10-25.
+- Backend shape: we own the AI proxy and the ad-verification endpoint, the AI key stays server-side, and the ledger is managed Postgres. Decided 2026-10-25.
+- Credits: 1 per action, provisional until the ad-payout comparison. Decided 2026-10-25.
 
 ## Open
 
-Mobile stack, backend and hosting, AI provider and model, subscription price, and credits charged per action. Options and recommendations are in [PLAN.md](PLAN.md). Nothing in this spec picks them.
+- Hosting vendor, chosen in milestone M4.
+- AI provider and model name, chosen after the spike in milestone M5. No names or prices until that day. Verify the price then.
+- Subscription price, needed before v1.1. One monthly subscription and one credit pack, priced from measured cost per credit and a verified store commission.
+
+Details are in [PLAN.md](PLAN.md).
 
 ## Out of scope
 

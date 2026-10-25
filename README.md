@@ -4,7 +4,7 @@ LexiMD is an AI-assisted markdown notes app for iOS and Android. You turn a roug
 
 The app is also a rehearsal. Shipping it practises the release pipeline for a later life-sim game: signed builds, closed testing, rewarded ads, subscriptions, accounts, store review, a staged rollout, and an update.
 
-**Status: planning.** The mobile stack is not chosen. This repository holds the spec, the plan, and the release checklist. There is no application code yet.
+**Status: planning.** The app will be React Native with Expo. This repository holds the spec, the plan, and the release checklist. There is no application code yet.
 
 ## How to read the docs
 
