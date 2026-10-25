@@ -1,37 +1,54 @@
+import { useCallback, useMemo, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-export const CORE_FUNCTION =
-  'Turn a rough note into clean markdown and see it rendered, diagrams included.';
+import { copy } from './src/copy';
+import { createFileNoteIo } from './src/notes/fileNoteIo';
+import { createNoteStore, NoteStore } from './src/notes/store';
+import { EditorScreen } from './src/screens/EditorScreen';
+import { LibraryScreen } from './src/screens/LibraryScreen';
 
-export default function App() {
+export const CORE_FUNCTION = copy.coreFunction;
+
+type Route = { name: 'library' } | { name: 'editor'; id: string };
+
+type Props = {
+  store?: NoteStore;
+};
+
+export default function App({ store }: Props) {
+  const notes = useMemo(() => store ?? createNoteStore(createFileNoteIo()), [store]);
+  const [route, setRoute] = useState<Route>({ name: 'library' });
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const openLibrary = useCallback(() => {
+    setRoute({ name: 'library' });
+    setRefreshKey((value) => value + 1);
+  }, []);
+
+  async function createNote() {
+    const note = await notes.create('');
+    setRoute({ name: 'editor', id: note.id });
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.name}>LexiMD</Text>
-      <Text style={styles.sentence}>{CORE_FUNCTION}</Text>
+    <SafeAreaProvider
+      initialMetrics={{
+        frame: { x: 0, y: 0, width: 0, height: 0 },
+        insets: { top: 0, left: 0, bottom: 0, right: 0 },
+      }}
+    >
       <StatusBar style="dark" />
-    </View>
+      {route.name === 'library' ? (
+        <LibraryScreen
+          onCreate={() => void createNote()}
+          onOpen={(id) => setRoute({ name: 'editor', id })}
+          refreshKey={refreshKey}
+          store={notes}
+        />
+      ) : (
+        <EditorScreen noteId={route.id} onBack={openLibrary} store={notes} />
+      )}
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
-  name: {
-    color: '#111',
-    fontSize: 32,
-    fontWeight: '600',
-    marginBottom: 16,
-  },
-  sentence: {
-    color: '#111',
-    fontSize: 18,
-    lineHeight: 26,
-    textAlign: 'center',
-  },
-});

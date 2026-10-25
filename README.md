@@ -4,7 +4,7 @@ LexiMD is an AI-assisted markdown notes app for iOS and Android. You turn a roug
 
 It ships on the App Store and Google Play. That path includes signed builds, closed testing, rewarded ads, subscriptions, accounts, store review, a staged rollout, and updates.
 
-**Status: M1, the hello screen.** The app is React Native with Expo SDK 58. This repository holds that app, the spec, the plan, and the release checklist. There is no editor yet.
+**Status: M2a, notes on the phone.** The app is React Native with Expo SDK 58. You can create, edit, and delete a note. Notes are markdown files on the phone. The library lists them. With no notes, the screen shows the core-function sentence. Split view, folders, tags, search, dark mode, Vietnamese, and sharing a `.md` file are the next pull requests.
 
 ## Run the app
 
@@ -15,7 +15,7 @@ npm ci
 npm start
 ```
 
-The only screen shows **LexiMD** and this sentence: "Turn a rough note into clean markdown and see it rendered, diagrams included."
+The library shows **LexiMD**. With no notes it also shows this sentence: "Turn a rough note into clean markdown and see it rendered, diagrams included." **New note** opens a plain-text editor. The title is the first line of the note. **Back** returns to the library. **Delete** asks before removing the note from the phone.
 
 The iOS bundle id and the Android application id are both `app.leximd`. They exist so a debug build can compile. They are not registered in App Store Connect or Play Console. Change them before M3 if you want a different id.
 
