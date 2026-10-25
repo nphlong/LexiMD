@@ -1,6 +1,6 @@
 # LexiMD plan
 
-Status: planning. This is the document to review. The spec is [SPEC.md](SPEC.md). The store steps are [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
+Status: M1 is in review. The hello screen, lint, tests, and CI are in the app. Opening that screen on a phone is still the owner's check. This is the document to review. The spec is [SPEC.md](SPEC.md). The store steps are [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
 
 The design checklist used here has five questions. A shippable MVP is what is left after all five have a clear answer.
 
@@ -176,7 +176,7 @@ Start the store accounts now, in parallel with M1. Enrollment and the Play close
 
 ### M1 — The app boots on a phone
 
-Stack: React Native with Expo, decided 2026-10-25.
+Stack: React Native with Expo, decided 2026-10-25. The M1 project is Expo SDK 57, from the blank TypeScript template. On 2026-10-25, Expo's create-expo-app docs said that during the SDK 58 transition, Expo Go on a physical phone should use SDK 57, and that `create-expo-app@latest` without a template creates an SDK 57 project. Stay on SDK 57 until a later milestone has a reason to move.
 
 Start with an Expo project in TypeScript. Add lint, tests, and CI that builds on both iOS and Android. The only screen is a hello screen that shows the core-function sentence. No editor, notes, folders, AI, ads, or server in this pull request.
 
@@ -185,9 +185,11 @@ Start with an Expo project in TypeScript. Add lint, tests, and CI that builds on
 - CI lints, tests, and builds for iOS and Android.
 - A debug build installs on one iPhone and one Android phone and shows that hello screen.
 
+**Status:** the hello screen, lint, one test, and CI are in the M1 pull request. CI lints, tests, and compiles an Android debug APK and an iOS Simulator app. It does not install the app on a phone, and it does not sign a store build. The phone line above is still open.
+
 **Release step covered:** the toolchain, and installing a build while in Vietnam.
 
-**You do:** Install the toolchain. Open the app and confirm the hello screen.
+**You do:** Install Node.js 22.13 or newer. Open the app on one iPhone and one Android phone and confirm the hello screen shows the core-function sentence. Expo Go is enough. A free Expo account is required for Expo Go on a physical iPhone. A local debug build needs Android Studio, and a Mac with Xcode 26.4 or newer for the iPhone. Steps are in the README. A paid Apple or Google developer account is not required for this check. Start those enrollments in parallel anyway; they are on the critical path for M3.
 
 ### M2 — Split view works offline
 
