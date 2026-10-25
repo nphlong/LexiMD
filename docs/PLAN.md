@@ -1,6 +1,6 @@
 # LexiMD plan
 
-Status: M1 is in review. The hello screen, lint, tests, and CI are in the app. Opening that screen on a phone is still the owner's check. This is the document to review. The spec is [SPEC.md](SPEC.md). The store steps are [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
+Status: M1 is on `dev`. The owner confirmed the hello screen on an iPhone. Opening it on Android is still the owner's check. M2 is split into three pull requests so each one stays reviewable. M2a (create, edit, and delete notes stored on the phone) is in review. M2b (offline split view) and M2c (folders, tags, search, dark mode, English and Vietnamese, and `.md` files) have not started. This is the document to review. The spec is [SPEC.md](SPEC.md). The store steps are [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
 
 The design checklist used here has five questions. A shippable MVP is what is left after all five have a clear answer.
 
@@ -185,7 +185,7 @@ Start with an Expo project in TypeScript. Add lint, tests, and CI that builds on
 - CI lints, tests, and builds for iOS and Android.
 - A debug build installs on one iPhone and one Android phone and shows that hello screen.
 
-**Status:** the hello screen, lint, one test, and CI are in the M1 pull request. CI lints, tests, and compiles an Android debug APK and an iOS Simulator app. It does not install the app on a phone, and it does not sign a store build. The phone line above is still open.
+**Status:** CI lints, tests, and compiles an Android debug APK and an iOS Simulator app. The owner confirmed the hello screen on an iPhone. Android is still the owner's check. CI does not install the app on a phone, and it does not sign a store build.
 
 **Release step covered:** the toolchain, and installing a build while in Vietnam.
 
@@ -204,6 +204,16 @@ Start with an Expo project in TypeScript. Add lint, tests, and CI that builds on
 - WYSIWYG is not in this pull request.
 
 **Release step covered:** the product loop on a device, before any account exists.
+
+**Status:** One pull request that also bundled a markdown renderer, mermaid, folders, tags, search, dark mode, two languages, and file sharing would be too large to review. M2 is three sequential pull requests, each against `dev`. The next one starts only after the previous one is reviewed.
+
+| Pull request | What it adds |
+| --- | --- |
+| M2a | Create, edit, and delete a note. Each note is a markdown file in the app documents directory, with `index.json` beside those files. The library lists notes. An empty library shows the core-function sentence. |
+| M2b | Split view. The preview is a WebView that renders markdown and mermaid from libraries bundled in the app. |
+| M2c | Folders, tags, search by title or tag, dark mode, English and Vietnamese, and open, save, and share a `.md` file. |
+
+M2a is the current pull request. The free path that shows a preview in under 30 seconds is M2b.
 
 **You do:** use it yourself. If the loop is slower than 30 seconds or the preview is wrong, say so in the pull request. That blocks M3.
 

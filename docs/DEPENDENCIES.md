@@ -5,10 +5,12 @@ Direct dependencies of the LexiMD app. LexiMD is proprietary software. See [LICE
 | Package | Version | License | Role |
 | --- | --- | --- | --- |
 | expo | 58.0.19 | MIT | Expo SDK |
-| expo-status-bar | 58.0.4 | MIT | Status bar on the hello screen |
+| expo-file-system | 58.0.11 | MIT | Read and write note files in the app documents directory. Included in Expo Go. |
+| expo-status-bar | 58.0.4 | MIT | Status bar |
 | react | 19.3.0 | MIT | UI |
 | react-native | 0.88.0 | MIT | Mobile runtime |
-| @testing-library/react-native | 14.1.0 | MIT | Hello-screen test |
+| react-native-safe-area-context | 5.10.1 | MIT | Keep the library and editor inside the screen insets. Included in Expo Go. |
+| @testing-library/react-native | 14.1.0 | MIT | Library and editor tests |
 | @types/jest | 30.0.0 | MIT | Jest types |
 | @types/react | 19.3.0 | MIT | React types |
 | eslint | 9.39.5 | MIT | Lint |
@@ -21,4 +23,4 @@ Ranges in `package.json` are the ones `npx expo install expo@^58.0.0 --fix` sele
 
 The placeholder icons in `assets/` come from the Expo `blank-typescript` template (MIT, Copyright (c) 2015-present 650 Industries, Inc.). They are not the LexiMD brand. Replace them before a store listing.
 
-Transitive packages were scanned for GPL, AGPL, SSPL, EUPL, and non-commercial licenses. The only match is `node-forge@1.4.0`, dual-licensed BSD-3-Clause OR GPL-2.0. Expo CLI pulls it in. It is not part of the hello screen. Use it under BSD-3-Clause.
+Transitive packages were scanned for GPL, AGPL, SSPL, EUPL, and non-commercial licenses. The only match is `node-forge@1.4.0`, dual-licensed BSD-3-Clause OR GPL-2.0. Expo CLI pulls it in. It is not part of the note store. Use it under BSD-3-Clause.

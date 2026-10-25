@@ -10,6 +10,7 @@ The mobile stack is React Native with Expo SDK 58, in TypeScript. The stack was 
 - M1 is the Expo project at the repo root: TypeScript, lint, tests, CI that builds on iOS and Android, and a hello screen. Add no product features to that screen.
 - Expo and Node `.gitignore` entries were added in M1. Keep generated `ios/` and `android/` directories out of git.
 - WYSIWYG is part of v1, in its own milestone after the split-view editor. Do not add it to the M1 hello screen.
+- M2 is split into three pull requests against `dev`. M2a stores notes on the phone (create, edit, delete). M2b is the offline split-view preview. M2c is folders, tags, search, dark mode, English and Vietnamese, and open, save, and share `.md`. Finish and review one before starting the next. Keep the later slices out of an earlier pull request.
 
 ## Secrets
 
