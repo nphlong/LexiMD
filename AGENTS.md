@@ -1,6 +1,6 @@
 # Agent conventions
 
-The mobile stack is React Native with Expo SDK 57, in TypeScript, decided 2026-10-25. The app lives at the repository root. The hosting vendor and the AI provider are still open. The subscription price stays open until v1.1. Read [docs/PLAN.md](docs/PLAN.md) before changing the repo.
+The mobile stack is React Native with Expo SDK 58, in TypeScript. The stack was decided 2026-10-25. The SDK moved from 57 to 58 so the current App Store Expo Go can open the app. The app lives at the repository root. The hosting vendor and the AI provider are still open. The subscription price stays open until v1.1. Read [docs/PLAN.md](docs/PLAN.md) before changing the repo.
 
 ## Pull requests
 

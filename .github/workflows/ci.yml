@@ -1,7 +1,7 @@
 # M1 checks. No Expo account, store account, or signing secret is used.
 #
 # This workflow does prove:
-# - ESLint, the hello-screen unit test, and TypeScript
+# - ESLint, the hello-screen unit test, TypeScript, and expo-doctor
 # - an Android debug APK for arm64-v8a, signed only by the automatic debug keystore
 # - an iOS Simulator .app compiled with CODE_SIGNING_ALLOWED=NO
 #
@@ -45,6 +45,7 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run typecheck
+      - run: npx expo-doctor@latest
 
   android:
     name: Android debug APK
@@ -64,8 +65,8 @@ jobs:
       - name: Install native build tools
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends cmake ninja-build
       - run: npm ci
-      # compileSdk 36, build-tools 36.0.0, and NDK 27.1.12297006 match
-      # react-native 0.86 (node_modules/react-native/gradle/libs.versions.toml).
+      # compileSdk 37, build-tools 37.0.0, and NDK 27.1.12297006 match
+      # react-native 0.88 (node_modules/react-native/gradle/libs.versions.toml).
       # JDK 17 matches Expo's current Android toolchain doc.
       - name: Install Android SDK packages
         run: |
@@ -77,10 +78,14 @@ jobs:
           SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
           test -x "$SDKMANAGER"
           yes | "$SDKMANAGER" --licenses >/dev/null || true
+          # sdkmanager publishes API 37 as platforms;android-37.0. AGP looks up android-37.
           "$SDKMANAGER" \
-            "platforms;android-36" \
-            "build-tools;36.0.0" \
+            "platforms;android-37.0" \
+            "build-tools;37.0.0" \
             "ndk;27.1.12297006"
+          if [ ! -e "$ANDROID_HOME/platforms/android-37" ]; then
+            ln -s android-37.0 "$ANDROID_HOME/platforms/android-37"
+          fi
       - name: Generate the Android project
         run: npx expo prebuild --platform android --no-install
       - name: Assemble an arm64 debug APK

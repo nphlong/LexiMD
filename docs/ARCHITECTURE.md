@@ -1,6 +1,6 @@
 # LexiMD architecture
 
-Status: planning. The phone app is React Native with Expo (decided 2026-10-25). The boxes below are responsibilities. The hosting vendor and the AI provider are still chosen later; see [PLAN.md](PLAN.md).
+Status: planning. The phone app is React Native with Expo SDK 58 (stack decided 2026-10-25; SDK 58 so the current App Store Expo Go can open it). The boxes below are responsibilities. The hosting vendor and the AI provider are still chosen later; see [PLAN.md](PLAN.md).
 
 ## Components
 
