@@ -6,7 +6,8 @@ Direct dependencies of the LexiMD app. LexiMD is proprietary software. See [LICE
 | --- | --- | --- | --- |
 | expo | 58.0.19 | MIT | Expo SDK |
 | expo-asset | 58.0.18 | MIT | Copy the bundled mermaid library onto the phone. Included in Expo Go. |
-| expo-file-system | 58.0.11 | MIT | Read and write note files, and the local preview page, in the app documents directory. Included in Expo Go. |
+| expo-file-system | 58.0.11 | MIT | Read and write note files and the local preview page, and open the system document picker. Included in Expo Go. |
+| expo-sharing | 58.0.20 | MIT | Open the system share sheet with a local `.md` file. Saving the file is one of the actions in that sheet. Included in Expo Go. |
 | expo-status-bar | 58.0.4 | MIT | Status bar |
 | markdown-it | 15.0.3 | MIT | Turn a note into HTML for the preview. Runs in the app, not from a CDN. |
 | mermaid | 12.2.0 | MIT | Render diagrams in the preview. `scripts/bundle-preview.mjs` copies `dist/mermaid.min.js` into the app. It is not loaded from a CDN. |

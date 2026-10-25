@@ -4,7 +4,7 @@ LexiMD is an AI-assisted markdown notes app for iOS and Android. You turn a roug
 
 It ships on the App Store and Google Play. That path includes signed builds, closed testing, rewarded ads, subscriptions, accounts, store review, a staged rollout, and updates.
 
-**Status: M2b, offline split view.** The app is React Native with Expo SDK 58. You can create, edit, and delete a note, and see it rendered, including a mermaid diagram, with the libraries on the phone. On a phone, Write and Preview are a toggle. A wide screen shows them side by side. Folders, tags, search, dark mode, Vietnamese, and sharing a `.md` file are the next pull request.
+**Status: M2c, library, theme, and files.** The app is React Native with Expo SDK 58. You can create, edit, and delete a note, put it in a folder, tag it, and find it by title or tag. The preview renders markdown and a mermaid diagram from libraries on the phone. The UI is English, and it follows the system appearance unless you override it. You can open a `.md` file and share one. On a phone, Write and Preview are a toggle. A wide screen, including a tablet, shows them side by side.
 
 ## Run the app
 
@@ -17,7 +17,9 @@ npm start
 
 The library shows **LexiMD**. With no notes it also shows this sentence: "Turn a rough note into clean markdown and see it rendered, diagrams included." **New note** opens the editor. The title is the first line of the note. **Back** returns to the library. **Delete** asks before removing the note from the phone.
 
-On a phone, **Write** and **Preview** switch the editor and the rendered note. The preview updates while you type. A screen at least 600 points wide shows both at once. A mermaid block renders in the preview. A diagram with a syntax error shows "This diagram has a syntax error." and the rest of the note stays on screen. The preview does not load libraries from the internet.
+On a phone, **Write** and **Preview** switch the editor and the rendered note. The preview updates while you type. A screen at least 600 points wide, including a tablet, shows both at once and puts folders in a sidebar. The app rotates. A mermaid block renders in the preview. A diagram with a syntax error shows "This diagram has a syntax error." and the rest of the note stays on screen. The preview does not load libraries from the internet. Dark mode colors the preview as well as the rest of the app.
+
+**Settings** is a sheet on the library. Appearance can follow the phone, or stay Light or Dark. The UI is English. Search matches a title or a tag. **New folder** files notes. **Open file** imports a `.md` file from the document picker. **Share** on a note opens the system share sheet, which can save the file or send it.
 
 `npm ci` copies the mermaid library into `assets/preview/`. That file is generated and is not committed.
 

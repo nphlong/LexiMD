@@ -33,8 +33,62 @@ describe('note store', () => {
         title: 'Milk',
         createdAt: now.toISOString(),
         updatedAt: now.toISOString(),
+        folderId: null,
+        tags: [],
       },
     ]);
+  });
+
+  test('reads an older index that has no folders or tags', async () => {
+    const { io, store } = storeWithClock([now]);
+    const id = createNoteId(now, () => 0.5);
+    io.files.set(
+      'index.json',
+      JSON.stringify([
+        {
+          id,
+          title: 'Old',
+          createdAt: now.toISOString(),
+          updatedAt: now.toISOString(),
+        },
+      ]),
+    );
+
+    expect(await store.list()).toEqual([
+      {
+        id,
+        title: 'Old',
+        createdAt: now.toISOString(),
+        updatedAt: now.toISOString(),
+        folderId: null,
+        tags: [],
+      },
+    ]);
+  });
+
+  test('puts a note in a folder, tags it, and keeps the note when the folder is removed', async () => {
+    const { store } = storeWithClock([now, later, later, later]);
+    const created = await store.create('Milk');
+    const folder = await store.createFolder('  Shop  ');
+    await store.setFolder(created.id, folder.id);
+    const tagged = await store.setTags(created.id, ['groceries', ' Groceries ', '']);
+
+    expect(tagged.tags).toEqual(['groceries']);
+    expect(tagged.folderId).toBe(folder.id);
+    expect((await store.listFolders()).map((item) => item.name)).toEqual(['Shop']);
+
+    await store.removeFolder(folder.id);
+
+    expect(await store.listFolders()).toEqual([]);
+    expect((await store.read(created.id))?.folderId).toBeNull();
+    expect((await store.read(created.id))?.tags).toEqual(['groceries']);
+  });
+
+  test('rejects an empty or duplicate folder name', async () => {
+    const { store } = storeWithClock([now, later]);
+    await expect(store.createFolder('   ')).rejects.toBeInstanceOf(NoteStoreError);
+    await store.createFolder('Shop');
+    await expect(store.createFolder('shop')).rejects.toBeInstanceOf(NoteStoreError);
   });
 
   test('edits the body and the title, and keeps the created time', async () => {

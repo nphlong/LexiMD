@@ -7,7 +7,7 @@ describe('previewLayout', () => {
     expect(previewLayout(SPLIT_MIN_WIDTH - 1)).toBe('toggle');
   });
 
-  test('uses side by side when the screen is wide enough', () => {
+  test('uses side by side on a landscape phone or a tablet', () => {
     expect(previewLayout(SPLIT_MIN_WIDTH)).toBe('split');
     expect(previewLayout(800)).toBe('split');
   });

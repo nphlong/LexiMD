@@ -1,6 +1,6 @@
 # LexiMD plan
 
-Status: M1 and M2a are on `dev`. The owner tested M2a on an iPhone and an Android phone. M2b (offline split view) is in review. M2c (folders, tags, search, dark mode, English and Vietnamese, and `.md` files) has not started. This is the document to review. The spec is [SPEC.md](SPEC.md). The store steps are [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
+Status: M1, M2a, and M2b are on `dev`. The owner tested M2a on an iPhone and an Android phone, and verified M2b on phones. M2c (folders, tags, search, dark mode, and `.md` files) is in review. The v1 UI is English only. This is the document to review. The spec is [SPEC.md](SPEC.md). The store steps are [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
 
 The design checklist used here has five questions. A shippable MVP is what is left after all five have a clear answer.
 
@@ -16,7 +16,7 @@ Recorded 2026-10-25. Long accepted the recommendations, then confirmed the produ
 
 1. **Mobile stack.** React Native with Expo. Markdown preview and mermaid still render in a WebView. Signed builds later use Expo's build service (EAS).
 2. **Backend and hosting.** We own the AI proxy and the ad-verification endpoint. The AI key stays in that service. The credit ledger is managed Postgres. Hosted auth for Apple, Google, and email is fine. The exact hosting vendor is chosen in M5 and written here when it is chosen. Through v1.1 the service does not keep a note library. v1.3 adds a separate note store for sync.
-3. **AI provider and model.** Chosen after a short paid spike, not before. The spike is ten real notes, including Vietnamese notes, each asked for clean markdown and for a mermaid diagram. Keep the provider whose cheap model does both and publishes a token price. Verify the price on that day and store the figure in server config. No provider name, model name, or price is written down before the spike. One provider only in v1.
+3. **AI provider and model.** Chosen after a short paid spike, not before. The spike is ten real notes, including notes written in Vietnamese, each asked for clean markdown and for a mermaid diagram. That checks the model. The UI stays English. Keep the provider whose cheap model does both and publishes a token price. Verify the price on that day and store the figure in server config. No provider name, model name, or price is written down before the spike. One provider only in v1.
 4. **Credits per action.** 1 credit per action. One rewarded ad grants 5 credits, so one ad covers five actions. Provisional until M7 compares a real ad payout with the cost log. If one ad cannot cover five actions, change this number before M8. Rewarded-ad revenue, including in Vietnam: **verify.** Do not assume an eCPM.
 5. **This product.** LexiMD is the product these docs describe. The release pipeline is how this app ships.
 6. **Editor.** v1 includes split view and WYSIWYG on one screen, writing the same markdown file. The approach is chosen in a short spike at the start of M4. Two options, and no library is named: a rich-text editor library in React Native, or a WebView-based editor bundled offline next to the preview. Spike the WebView-based editor first, because both modes must round-trip one markdown file, including a mermaid block, and the preview is already a bundled WebView. If that spike fails on the keyboard, selection, or performance, spike a rich-text library next. **Verify** markdown round-trip, mermaid survival, offline use, both keyboards, and a license that fits a closed-source app. Record the license and the result here before the mode is built.
@@ -40,7 +40,7 @@ v1 ships with ad credits only, so this can wait.
 - A rewarded video grants 5 credits, verified by AdMob server-side verification. Sign-in (Apple, Google, email) is required for credits and for AI. Local editing works signed out.
 - The server holds the AI key and the per-user credit ledger.
 - One AI provider and a cheap model at first, a daily cap per user, a global spend ceiling, and cost-per-credit tracking.
-- Languages: English and Vietnamese. Test from Vietnam. Minimum age 13.
+- Interface language: English only in v1. Language packs are much later. Test from Vietnam. That is where the build is tried, not a Vietnamese UI. Minimum age 13.
 - Phases are v1, v1.1, v1.2, v1.3, and later, as listed below.
 
 The other 12-week draft assumed a stack, named models, named hosts, a second model for subscribers, RevenueCat, and a public launch campaign. This plan keeps its sequence (accounts, local editor, ledger, AI, ads, closed test, submission) and drops those assumptions. Prices and model names stay out until you verify them.
@@ -72,7 +72,7 @@ Cap is 7. v1 has 4. v1.1 has 5. Later phases do not add a screen.
 | 1 | Library | Open an unfinished note, or start one. Folders, tags, and search are on this screen. | v1 |
 | 2 | Editor | Write in split view or WYSIWYG, and see the live preview, including mermaid. AI actions are a sheet on this screen. | v1 |
 | 3 | Credits | Show the balance, offer one rewarded ad, and sign in when needed. | v1 |
-| 4 | Settings | Dark mode, English or Vietnamese, account, privacy, delete account. Sync status is a row here in v1.3. | v1 |
+| 4 | Settings | Dark mode, account, privacy, delete account. Sync status is a row here in v1.3. | v1 |
 | 5 | Paywall | Buy the subscription or a credit pack, and restore purchases. | v1.1 |
 
 These stay sheets or system pickers, so they do not add a screen: the AI action sheet, the editor-mode switch, folder and tag editing, the ad-consent dialog, the file picker, and the share sheet. Search is a field on the Library.
@@ -99,7 +99,6 @@ That cue is the reason to come back. If the balance is zero, the cue opens Credi
 | Dark mode | Keeps you in the editor. It is a setting, not a project. | Keep |
 | Folders, manual tags, title and tag search | Gets you back to the note so you can repeat. | Keep |
 | Open, save, and share `.md` | Gets text into the loop and out of it. | Keep |
-| English and Vietnamese UI | The two languages of the product. | Keep |
 | Sign-in: Apple, Google, email | Credits and AI require an account. Editing does not. The same account is reused for sync in v1.3. | Keep |
 | Format | The one-tap cleanup. | Keep |
 | Diagram (prompt to mermaid) | The one-tap diagram. | Keep |
@@ -156,6 +155,16 @@ Open questions, and the design stops there:
 
 No new screen is planned. A share sheet on the Editor, and a marker on the Library, have to be enough. If that design needs a sixth product screen, cut something else. The cap is 7, and v1.1 already uses 5.
 
+### Much later — language packs
+
+v1 is English only, decided 2026-10-25. User-facing strings live in one module, `src/copy.ts`, so a pack can replace those strings later without rewriting the screens. v1 does not include a language switch or a localization library.
+
+| Feature | Does it serve the loop? | Result |
+| --- | --- | --- |
+| Language packs | The v1 loop is in English. A pack translates the same strings. | Defer. Much later than v1 |
+
+Testing from Vietnam is where the build is tried. It is not a Vietnamese UI. A note can still be written in any language. The M6 spike includes a note written in Vietnamese so the model is checked.
+
 ### Cut
 
 | Feature | Why it is cut |
@@ -198,30 +207,32 @@ Start with an Expo project in TypeScript. Add lint, tests, and CI that builds on
 - You can create, edit, and delete a note.
 - Split view renders markdown and a mermaid diagram with the network off.
 - You can put the note in a folder, add tags, and find it by title or tag.
-- Dark mode works. The UI switches between English and Vietnamese.
+- Dark mode works. The UI is English.
 - You can open, save, and share a `.md` file.
 - The AI tap arrives in M6. Here the free path is enough: type or paste markdown and see the preview, in under 30 seconds.
 - WYSIWYG is not in this pull request.
 
 **Release step covered:** the product loop on a device, before any account exists.
 
-**Status:** One pull request that also bundled a markdown renderer, mermaid, folders, tags, search, dark mode, two languages, and file sharing would be too large to review. M2 is three sequential pull requests, each against `dev`. The next one starts only after the previous one is reviewed.
+**Status:** One pull request that also bundled a markdown renderer, mermaid, folders, tags, search, dark mode, and file sharing would be too large to review. M2 is three sequential pull requests, each against `dev`.
 
 | Pull request | What it adds |
 | --- | --- |
 | M2a | Create, edit, and delete a note. Each note is a markdown file in the app documents directory, with `index.json` beside those files. The library lists notes. An empty library shows the core-function sentence. |
 | M2b | Split view. The preview is a WebView that renders markdown and mermaid from libraries bundled in the app. |
-| M2c | Folders, tags, search by title or tag, dark mode, English and Vietnamese, and open, save, and share a `.md` file. |
+| M2c | Folders, tags, search by title or tag, dark mode, and open, save, and share a `.md` file. The UI is English. |
 
 M2a is merged. The owner tested create, edit, and delete on an iPhone and an Android phone.
 
-M2b is the current pull request. The preview is a WebView. markdown-it renders the note in the app. mermaid is copied onto the phone from the app bundle and is not loaded from a CDN. The preview page blocks network requests. A diagram with a syntax error shows a message in the preview.
+M2b is merged. The owner verified the offline preview on phones. The preview is a WebView. markdown-it renders the note in the app. mermaid is copied onto the phone from the app bundle and is not loaded from a CDN. The preview page blocks network requests. A diagram with a syntax error shows a message in the preview.
 
-The app stays in portrait. On a screen narrower than 600 points, Write and Preview are a toggle, and the preview keeps updating while the user types. A wider screen shows the editor and the preview side by side. A portrait phone uses the toggle because the keyboard already covers half the screen.
+M2c is the current pull request, and it is the last slice of M2. Folders and tags are metadata in the note index. An older index that is only a list of notes is still read, and the next save writes folders and notes together. Search matches the title or a tag, not the body. Appearance follows the system, with Light or Dark as an override, and the preview page uses that same choice, including the mermaid theme. A sheet on the library can switch appearance. That sheet is not the Settings screen: account and privacy stay later, and this pull request does not add a screen. The UI is English. User-facing strings live in `src/copy.ts`. Open uses the system document picker. Share writes a `.md` file and opens the system share sheet, which is also how the file is saved.
 
-The free path that shows a preview in under 30 seconds is this pull request. M2c has not started.
+The app rotates. On a screen narrower than 600 points, Write and Preview are a toggle, folders are a horizontal list, and the preview keeps updating while the user types. A wider screen, including a tablet, shows folders in a sidebar and the editor beside the preview. A portrait phone uses the toggle because the keyboard already covers half the screen.
 
-**You do:** use it yourself. If the loop is slower than 30 seconds or the preview is wrong, say so in the pull request. That blocks M3.
+The free path that shows a preview in under 30 seconds is in this milestone. WYSIWYG stays in M4. CI does not install the app on a phone or a tablet.
+
+**You do:** use this pull request on an iPhone, an Android phone, and an Android tablet emulator. If the loop is slower than 30 seconds, the preview is wrong, or the tablet layout breaks, say so. That blocks M3.
 
 ### M3 — First signed builds, and the Play clock starts
 
@@ -230,7 +241,7 @@ The free path that shows a preview in under 30 seconds is this pull request. M2c
 - An internal TestFlight build and a Play closed-testing build of the M2 app install on your phones.
 - Signing is documented. The keystores are in a password manager, not in git.
 - A secret scan of the binaries is clean.
-- The privacy-policy URL is live in English and Vietnamese, covering local notes. AI, ads, and sync paragraphs are updated in the milestones that add them.
+- The privacy-policy URL is live in English, covering local notes. AI, ads, and sync paragraphs are updated in the milestones that add them.
 
 **Release step covered:** certificates, bundle ids, TestFlight, and the Play closed track. This is the earliest real build, so the closed-test clock starts here.
 
@@ -282,7 +293,7 @@ Run the provider spike from the Decided section, then name the provider and the 
 - Each call logs token counts and an estimated cost from a price you verified that day.
 - A provider failure does not debit. A retry with the same request id does not debit twice.
 - Request text is deleted within 24 hours.
-- One Vietnamese note and one mermaid prompt succeed on the cheap model.
+- One note written in Vietnamese, and one mermaid prompt, succeed on the cheap model. That checks the model. The UI stays English.
 
 **Release step covered:** a server-side provider key, and cost-per-credit measurement.
 
@@ -308,7 +319,7 @@ Run the provider spike from the Decided section, then name the provider and the 
 **Done when**
 
 - Split view and WYSIWYG are both in the build you submit.
-- Privacy policy and terms are live in English and Vietnamese, including the AI and ads facts from [SPEC.md](SPEC.md). Notes are still described as on-device. Sync is not in this release.
+- Privacy policy and terms are live in English, including the AI and ads facts from [SPEC.md](SPEC.md). Notes are still described as on-device. Sync is not in this release.
 - Apple privacy labels and the Google Data safety form are submitted. **Verify** each question against the SDKs in the binary.
 - Crash reporting and the small analytics set are on, with no note contents. You have caused one test crash and seen it.
 - In-app account deletion is on the build you submit.
@@ -348,7 +359,7 @@ Owner tasks. Detail and the Play tester bar are in [RELEASE_CHECKLIST.md](RELEAS
 - [ ] Google Play Console, individual. Registration fee: **verify.**
 - [ ] Play closed test started at M3. Google's published rule, read on 2026-10-25, applies to personal accounts created after 13 November 2023: at least 12 testers opted in continuously for 14 days, then an application for production access. **Verify** on [Google's help page](https://support.google.com/googleplay/android-developer/answer/14151465). If the account is older, verify whether production is already unlocked, and still run the closed test.
 - [ ] AdMob account and server-side verification.
-- [ ] Privacy policy URL, English and Vietnamese. v1 says notes stay on the device. v1.3 updates that before sync ships.
+- [ ] Privacy policy URL, in English. v1 says notes stay on the device. A later language pack updates the policy for that language. v1.3 updates the policy before sync ships.
 - [ ] Terms of service. Subscription terms get added before M9: price, period, auto-renew, how to cancel.
 - [ ] In-app disclosure before the first AI action. A separate disclosure before the first sync, in v1.3.
 - [ ] Apple privacy labels and Google Data safety form. Update both again before v1.3.
@@ -369,7 +380,7 @@ Owner tasks. Detail and the Play tester bar are in [RELEASE_CHECKLIST.md](RELEAS
 | Play production stays locked until the personal-account closed test passes. | Start the closed test at M3. Recruit extra testers. The published bar on 2026-10-25 was 12 testers for 14 continuous days, for accounts created after 13 November 2023. **Verify.** |
 | The preview WebView is slow, or review treats the app as a thin wrapper. | Native shell, WebView for preview only, libraries bundled offline. Test on a low-end Android phone. Apple's minimum-functionality rule: **verify.** |
 | WYSIWYG on React Native is hard. | Two options: a rich-text editor library, or a WebView-based editor. Spike the WebView editor first, then a rich-text library if that fails. **Verify** markdown round-trip, mermaid, offline use, both keyboards, and the license. Record the license. If both the editor and the preview are WebViews, the native shell still has to carry the library, folders, credits, and settings. |
-| The cheap model mishandles Vietnamese or mermaid. | The M6 spike uses both. Switch model before the three actions ship if it fails. |
+| The cheap model mishandles a note written in Vietnamese, or mermaid. | The M6 spike uses both. That is a model check, not a Vietnamese UI. Switch model before the three actions ship if it fails. |
 | A modified client grants itself credits. | Only a verified ad callback, or a later verified purchase, adds credits. M7 includes a replayed-callback test. |
 | Note text leaks into logs, analytics, or a stored library before sync exists. | AI request text lives for the retry window only. Sample one analytics event and one crash before M8 submission. v1.3 is the first release allowed to store notes, and only in the note store. |
 | The single provider raises prices or goes down. | Daily caps and a dashboard spend alert. Price: **verify** when it changes. |
