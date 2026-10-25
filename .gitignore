@@ -1,0 +1,36 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*~
+
+# Secrets and signing material
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.cer
+*.keystore
+*.jks
+*.mobileprovision
+
+# Logs and local output
+*.log
+tmp/
+dist/
+build/
+coverage/
+
+# Installable build outputs
+*.apk
+*.aab
+*.ipa
+
+# Stack-specific build folders are added after the stack decision in docs/PLAN.md.
