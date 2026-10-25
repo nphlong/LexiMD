@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { CORE_FUNCTION } from './src/i18n/en';
+import { CORE_FUNCTION } from './src/copy';
 import { createFileNoteIo } from './src/notes/fileNoteIo';
 import { createNoteStore, NoteIo, NoteStore } from './src/notes/store';
 import { PreferencesProvider, usePreferences } from './src/preferences/Preferences';

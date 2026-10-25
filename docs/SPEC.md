@@ -11,10 +11,10 @@ The release path is part of shipping this product: signed builds, closed testing
 ## People and language
 
 - A person taking notes on a phone. Sharing a note with someone else is a later paid feature, after sync.
-- Interface languages: English and Vietnamese. The device language is used when it is Vietnamese; otherwise English.
-- Notes may be in any language. AI output follows the language of the note.
+- Interface language: English. Language packs are much later. User-facing strings live in one module so a pack can be added without rewriting the screens.
+- Notes may be in any language. AI output follows the language of the note. That is the note's text, not a translated UI.
 - Minimum age 13. The store age questionnaires still have to be answered, and the store rating wins if it comes out stricter. Verify at submission.
-- First testing happens from Vietnam.
+- First testing happens from Vietnam. That is where the build is tried, not a Vietnamese UI.
 
 ## Free tier
 
@@ -112,7 +112,7 @@ After sync, a subscriber can share a note or a folder with other people. The des
 
 ## Versions
 
-**v1.** Editor with split view and WYSIWYG, folders and tags, mermaid preview, dark mode, English and Vietnamese, sign-in, rewarded ads to credits, Format, Diagram, Auto-tag, analytics, and crash reporting. Notes stay on the device.
+**v1.** Editor with split view and WYSIWYG, folders and tags, mermaid preview, dark mode, an English UI, sign-in, rewarded ads to credits, Format, Diagram, Auto-tag, analytics, and crash reporting. Notes stay on the device.
 
 **v1.1.** Subscription and credit packs, restore purchases, and the Table, Summary, Action items, and Tone actions. Shipped as an update through the same store path.
 
@@ -120,7 +120,7 @@ After sync, a subscriber can share a note or a folder with other people. The des
 
 **v1.3.** Cloud backup and cross-device sync for signed-in users. This is its own version because v1.2 already adds camera and microphone permissions, and sync changes what the server stores.
 
-**Later.** Paid collaboration, after sync: share a note or a folder. Design not decided.
+**Later.** Paid collaboration, after sync: share a note or a folder. Design not decided. Language packs are much later than v1, and they are not part of that collaboration work.
 
 ## Decided
 
@@ -135,6 +135,7 @@ After sync, a subscriber can share a note or a folder with other people. The des
 - v1 editor: split view and WYSIWYG on one screen. Decided 2026-10-25.
 - Cloud backup and sync: v1.3, offline-first. Decided 2026-10-25.
 - Collaboration: paid, after sync, design not decided. Decided 2026-10-25.
+- Interface language: English only in v1. Language packs are much later. Decided 2026-10-25.
 
 ## Open
 

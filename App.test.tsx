@@ -7,13 +7,8 @@ jest.mock('react-native-webview', () => {
   return { __esModule: true, default: WebView, WebView };
 });
 
-jest.mock('expo-localization', () => ({
-  getLocales: () => [{ languageCode: 'en', languageTag: 'en-US' }],
-}));
-
 import App from './App';
 import { copy, CORE_FUNCTION } from './src/copy';
-import { vi } from './src/i18n/vi';
 import { createMemoryNoteIo } from './src/notes/memoryNoteIo';
 import { createNoteStore } from './src/notes/store';
 import { createSettingsStore } from './src/settings/settingsStore';
@@ -29,7 +24,7 @@ async function renderApp() {
     untitled: () => 'Untitled',
   });
   const settings = createSettingsStore(createMemoryNoteIo());
-  await settings.save({ appearance: 'light', language: 'en' });
+  await settings.save({ appearance: 'light' });
   return { io, store, ...(await render(<App settingsStore={settings} store={store} />)) };
 }
 
@@ -131,20 +126,5 @@ describe('library', () => {
       fireEvent.press(getByText('Shop'));
     });
     await findByText('Milk');
-  });
-
-  test('switches the library to Vietnamese', async () => {
-    const { findByPlaceholderText, findByText, getByText } = await renderApp();
-
-    await findByText(copy.settings);
-    await act(async () => {
-      fireEvent.press(getByText(copy.settings));
-    });
-    await act(async () => {
-      fireEvent.press(getByText(copy.vietnamese));
-    });
-
-    await findByText(vi.newNote);
-    await findByPlaceholderText(vi.search);
   });
 });

@@ -2,24 +2,22 @@ import { createMemoryNoteIo } from '../notes/memoryNoteIo';
 import { createSettingsStore } from './settingsStore';
 
 describe('settings store', () => {
-  test('uses system defaults when the file is missing or unreadable', async () => {
+  test('uses the system appearance when the file is missing or unreadable', async () => {
     const io = createMemoryNoteIo();
     const store = createSettingsStore(io);
 
-    expect(await store.read()).toEqual({ appearance: 'system', language: 'system' });
+    expect(await store.read()).toEqual({ appearance: 'system' });
 
     io.files.set('settings.json', '{');
-    expect(await store.read()).toEqual({ appearance: 'system', language: 'system' });
+    expect(await store.read()).toEqual({ appearance: 'system' });
   });
 
-  test('saves an appearance and a language', async () => {
+  test('saves an appearance and ignores a stored language', async () => {
     const io = createMemoryNoteIo();
     const store = createSettingsStore(io);
 
-    expect(await store.save({ appearance: 'dark', language: 'vi' })).toEqual({
-      appearance: 'dark',
-      language: 'vi',
-    });
-    expect(await store.read()).toEqual({ appearance: 'dark', language: 'vi' });
+    expect(await store.save({ appearance: 'dark' })).toEqual({ appearance: 'dark' });
+    io.files.set('settings.json', JSON.stringify({ appearance: 'light', language: 'vi' }));
+    expect(await store.read()).toEqual({ appearance: 'light' });
   });
 });

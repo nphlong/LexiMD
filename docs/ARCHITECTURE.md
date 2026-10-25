@@ -38,7 +38,7 @@ The preview runs inside a WebView because the mermaid and markdown libraries are
 
 ## What is stored where
 
-On the device: note files, folders, tags, appearance, language, and the draft the user is typing. This remains the working copy after sync exists. Appearance and language are a sheet on the library. The Settings screen, with account and privacy, is still later.
+On the device: note files, folders, tags, appearance, and the draft the user is typing. This remains the working copy after sync exists. Appearance is a sheet on the library. The Settings screen, with account and privacy, is still later. The UI is English. User-facing strings live in one module.
 
 On the server in v1:
 

@@ -1,7 +1,7 @@
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { usePreferences } from '../preferences/Preferences';
-import { AppearanceChoice, LanguageChoice } from '../settings/settings';
+import { AppearanceChoice } from '../settings/settings';
 import { Palette } from '../theme/colors';
 
 type Props = {
@@ -35,16 +35,11 @@ function Choice({
 }
 
 export function SettingsSheet({ visible, onClose }: Props) {
-  const { messages, colors, appearance, language, setAppearance, setLanguage } = usePreferences();
+  const { messages, colors, appearance, setAppearance } = usePreferences();
   const appearanceChoices: { id: AppearanceChoice; label: string }[] = [
     { id: 'system', label: messages.system },
     { id: 'light', label: messages.light },
     { id: 'dark', label: messages.dark },
-  ];
-  const languageChoices: { id: LanguageChoice; label: string }[] = [
-    { id: 'system', label: messages.system },
-    { id: 'en', label: messages.english },
-    { id: 'vi', label: messages.vietnamese },
   ];
 
   return (
@@ -67,18 +62,6 @@ export function SettingsSheet({ visible, onClose }: Props) {
                 label={choice.label}
                 onPress={() => setAppearance(choice.id)}
                 selected={appearance === choice.id}
-              />
-            ))}
-          </View>
-          <Text style={[styles.label, { color: colors.muted }]}>{messages.language}</Text>
-          <View style={styles.row}>
-            {languageChoices.map((choice) => (
-              <Choice
-                colors={colors}
-                key={choice.id}
-                label={choice.label}
-                onPress={() => setLanguage(choice.id)}
-                selected={language === choice.id}
               />
             ))}
           </View>

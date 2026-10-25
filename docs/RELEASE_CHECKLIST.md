@@ -18,7 +18,7 @@ Fill this in once per release:
 - [ ] AdMob account, when the app shows ads. Policy and app-link steps: **verify.**
 - [ ] Bundle id (iOS) and application id (Android) chosen and registered.
 - [ ] App records created in App Store Connect and Play Console.
-- [ ] Support email and a public privacy-policy URL. LexiMD needs the policy in English and Vietnamese.
+- [ ] Support email and a public privacy-policy URL. v1 needs the policy in English. A later language pack updates the policy for that language.
 
 Account review can take longer than a day. **Verify** current times. Start enrollment before the first signed build.
 
@@ -64,7 +64,7 @@ Do this:
 
 **Verify** pixel sizes, device classes, and required fields in each console at upload time. They change.
 
-- [ ] App name, short description, and full description. LexiMD: English and Vietnamese.
+- [ ] App name, short description, and full description. The v1 listing is English.
 - [ ] Icon, including the large store icon.
 - [ ] Screenshots for each required device size. Use the real core loop, not a mock that the build cannot do.
 - [ ] Play feature graphic, if the console still requires one. **Verify.**

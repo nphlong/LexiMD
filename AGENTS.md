@@ -10,7 +10,7 @@ The mobile stack is React Native with Expo SDK 58, in TypeScript. The stack was 
 - M1 is the Expo project at the repo root: TypeScript, lint, tests, CI that builds on iOS and Android, and a hello screen. Add no product features to that screen.
 - Expo and Node `.gitignore` entries were added in M1. Keep generated `ios/` and `android/` directories out of git.
 - WYSIWYG is part of v1, in its own milestone after the split-view editor. Do not add it to the M1 hello screen.
-- M2 is split into three pull requests against `dev`. M2a stores notes on the phone (create, edit, delete). M2b is the offline split-view preview. M2c adds folders, tags, search, dark mode, English and Vietnamese, and open, save, and share `.md`. Do not add WYSIWYG, AI, ads, accounts, a backend, sync, or analytics to M2. `npm ci` runs `scripts/bundle-preview.mjs`, which copies mermaid into `assets/preview/` for the offline preview. That copy is generated. Do not commit it.
+- M2 is split into three pull requests against `dev`. M2a stores notes on the phone (create, edit, delete). M2b is the offline split-view preview. M2c adds folders, tags, search, dark mode, and open, save, and share `.md`. The v1 UI is English. User-facing strings live in `src/copy.ts`. Do not add a language pack, a localization library, WYSIWYG, AI, ads, accounts, a backend, sync, or analytics to M2. `npm ci` runs `scripts/bundle-preview.mjs`, which copies mermaid into `assets/preview/` for the offline preview. That copy is generated. Do not commit it.
 
 ## Secrets
 
