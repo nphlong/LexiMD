@@ -34,7 +34,7 @@ flowchart LR
 | Ad verification | Checks the AdMob server-side verification signature and a one-time transaction id, then grants 5 credits. |
 | AI provider | One provider and one cheap model in v1. |
 
-The preview runs inside a WebView because the mermaid and markdown libraries are JavaScript. The WebView loads bundled files, not a CDN. WYSIWYG may use a WebView too, if the spike in [PLAN.md](PLAN.md) chooses that. The library, folders, credits, and settings stay native either way.
+The preview runs inside a WebView because the mermaid and markdown libraries are JavaScript. The WebView loads bundled files, not a CDN. The note is rendered to HTML in the app. The preview page is a file on the phone, next to the mermaid library, and its content security policy blocks network requests. A diagram with a syntax error shows a message in that page. On a screen narrower than 600 points, Write and Preview are a toggle and the preview keeps updating while the user types. A wider screen shows them side by side. WYSIWYG may use a WebView too, if the spike in [PLAN.md](PLAN.md) chooses that. The library, folders, credits, and settings stay native either way.
 
 ## What is stored where
 

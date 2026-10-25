@@ -1,6 +1,6 @@
 # LexiMD plan
 
-Status: M1 is on `dev`. The owner confirmed the hello screen on an iPhone. Opening it on Android is still the owner's check. M2 is split into three pull requests so each one stays reviewable. M2a (create, edit, and delete notes stored on the phone) is in review. M2b (offline split view) and M2c (folders, tags, search, dark mode, English and Vietnamese, and `.md` files) have not started. This is the document to review. The spec is [SPEC.md](SPEC.md). The store steps are [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
+Status: M1 and M2a are on `dev`. The owner tested M2a on an iPhone and an Android phone. M2b (offline split view) is in review. M2c (folders, tags, search, dark mode, English and Vietnamese, and `.md` files) has not started. This is the document to review. The spec is [SPEC.md](SPEC.md). The store steps are [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
 
 The design checklist used here has five questions. A shippable MVP is what is left after all five have a clear answer.
 
@@ -185,7 +185,7 @@ Start with an Expo project in TypeScript. Add lint, tests, and CI that builds on
 - CI lints, tests, and builds for iOS and Android.
 - A debug build installs on one iPhone and one Android phone and shows that hello screen.
 
-**Status:** CI lints, tests, and compiles an Android debug APK and an iOS Simulator app. The owner confirmed the hello screen on an iPhone. Android is still the owner's check. CI does not install the app on a phone, and it does not sign a store build.
+**Status:** CI lints, tests, and compiles an Android debug APK and an iOS Simulator app. The owner confirmed the hello screen on an iPhone, and later ran the app on an Android phone while testing M2a. CI does not install the app on a phone, and it does not sign a store build.
 
 **Release step covered:** the toolchain, and installing a build while in Vietnam.
 
@@ -213,7 +213,13 @@ Start with an Expo project in TypeScript. Add lint, tests, and CI that builds on
 | M2b | Split view. The preview is a WebView that renders markdown and mermaid from libraries bundled in the app. |
 | M2c | Folders, tags, search by title or tag, dark mode, English and Vietnamese, and open, save, and share a `.md` file. |
 
-M2a is the current pull request. The free path that shows a preview in under 30 seconds is M2b.
+M2a is merged. The owner tested create, edit, and delete on an iPhone and an Android phone.
+
+M2b is the current pull request. The preview is a WebView. markdown-it renders the note in the app. mermaid is copied onto the phone from the app bundle and is not loaded from a CDN. The preview page blocks network requests. A diagram with a syntax error shows a message in the preview.
+
+The app stays in portrait. On a screen narrower than 600 points, Write and Preview are a toggle, and the preview keeps updating while the user types. A wider screen shows the editor and the preview side by side. A portrait phone uses the toggle because the keyboard already covers half the screen.
+
+The free path that shows a preview in under 30 seconds is this pull request. M2c has not started.
 
 **You do:** use it yourself. If the loop is slower than 30 seconds or the preview is wrong, say so in the pull request. That blocks M3.
 

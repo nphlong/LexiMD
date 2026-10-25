@@ -4,7 +4,7 @@ LexiMD is an AI-assisted markdown notes app for iOS and Android. You turn a roug
 
 It ships on the App Store and Google Play. That path includes signed builds, closed testing, rewarded ads, subscriptions, accounts, store review, a staged rollout, and updates.
 
-**Status: M2a, notes on the phone.** The app is React Native with Expo SDK 58. You can create, edit, and delete a note. Notes are markdown files on the phone. The library lists them. With no notes, the screen shows the core-function sentence. Split view, folders, tags, search, dark mode, Vietnamese, and sharing a `.md` file are the next pull requests.
+**Status: M2b, offline split view.** The app is React Native with Expo SDK 58. You can create, edit, and delete a note, and see it rendered, including a mermaid diagram, with the libraries on the phone. On a phone, Write and Preview are a toggle. A wide screen shows them side by side. Folders, tags, search, dark mode, Vietnamese, and sharing a `.md` file are the next pull request.
 
 ## Run the app
 
@@ -15,7 +15,11 @@ npm ci
 npm start
 ```
 
-The library shows **LexiMD**. With no notes it also shows this sentence: "Turn a rough note into clean markdown and see it rendered, diagrams included." **New note** opens a plain-text editor. The title is the first line of the note. **Back** returns to the library. **Delete** asks before removing the note from the phone.
+The library shows **LexiMD**. With no notes it also shows this sentence: "Turn a rough note into clean markdown and see it rendered, diagrams included." **New note** opens the editor. The title is the first line of the note. **Back** returns to the library. **Delete** asks before removing the note from the phone.
+
+On a phone, **Write** and **Preview** switch the editor and the rendered note. The preview updates while you type. A screen at least 600 points wide shows both at once. A mermaid block renders in the preview. A diagram with a syntax error shows "This diagram has a syntax error." and the rest of the note stays on screen. The preview does not load libraries from the internet.
+
+`npm ci` copies the mermaid library into `assets/preview/`. That file is generated and is not committed.
 
 The iOS bundle id and the Android application id are both `app.leximd`. They exist so a debug build can compile. They are not registered in App Store Connect or Play Console. Change them before M3 if you want a different id.
 
