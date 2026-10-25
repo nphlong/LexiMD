@@ -1,6 +1,6 @@
 # LexiMD plan
 
-Status: M1 and M2a are on `dev`. The owner tested M2a on an iPhone and an Android phone. M2b (offline split view) is in review. M2c (folders, tags, search, dark mode, English and Vietnamese, and `.md` files) has not started. This is the document to review. The spec is [SPEC.md](SPEC.md). The store steps are [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
+Status: M1, M2a, and M2b are on `dev`. The owner tested M2a on an iPhone and an Android phone, and verified M2b on phones. M2c (folders, tags, search, dark mode, English and Vietnamese, and `.md` files) is in review. This is the document to review. The spec is [SPEC.md](SPEC.md). The store steps are [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
 
 The design checklist used here has five questions. A shippable MVP is what is left after all five have a clear answer.
 
@@ -205,7 +205,7 @@ Start with an Expo project in TypeScript. Add lint, tests, and CI that builds on
 
 **Release step covered:** the product loop on a device, before any account exists.
 
-**Status:** One pull request that also bundled a markdown renderer, mermaid, folders, tags, search, dark mode, two languages, and file sharing would be too large to review. M2 is three sequential pull requests, each against `dev`. The next one starts only after the previous one is reviewed.
+**Status:** One pull request that also bundled a markdown renderer, mermaid, folders, tags, search, dark mode, two languages, and file sharing would be too large to review. M2 is three sequential pull requests, each against `dev`.
 
 | Pull request | What it adds |
 | --- | --- |
@@ -215,13 +215,15 @@ Start with an Expo project in TypeScript. Add lint, tests, and CI that builds on
 
 M2a is merged. The owner tested create, edit, and delete on an iPhone and an Android phone.
 
-M2b is the current pull request. The preview is a WebView. markdown-it renders the note in the app. mermaid is copied onto the phone from the app bundle and is not loaded from a CDN. The preview page blocks network requests. A diagram with a syntax error shows a message in the preview.
+M2b is merged. The owner verified the offline preview on phones. The preview is a WebView. markdown-it renders the note in the app. mermaid is copied onto the phone from the app bundle and is not loaded from a CDN. The preview page blocks network requests. A diagram with a syntax error shows a message in the preview.
 
-The app stays in portrait. On a screen narrower than 600 points, Write and Preview are a toggle, and the preview keeps updating while the user types. A wider screen shows the editor and the preview side by side. A portrait phone uses the toggle because the keyboard already covers half the screen.
+M2c is the current pull request, and it is the last slice of M2. Folders and tags are metadata in the note index. An older index that is only a list of notes is still read, and the next save writes folders and notes together. Search matches the title or a tag, not the body. Appearance follows the system, with Light or Dark as an override, and the preview page uses that same choice, including the mermaid theme. The UI starts in Vietnamese when the device language is Vietnamese, and in English otherwise. A sheet on the library can switch appearance and language. That sheet is not the Settings screen: account and privacy stay later, and this pull request does not add a screen. Open uses the system document picker. Share writes a `.md` file and opens the system share sheet, which is also how the file is saved.
 
-The free path that shows a preview in under 30 seconds is this pull request. M2c has not started.
+The app rotates. On a screen narrower than 600 points, Write and Preview are a toggle, folders are a horizontal list, and the preview keeps updating while the user types. A wider screen, including a tablet, shows folders in a sidebar and the editor beside the preview. A portrait phone uses the toggle because the keyboard already covers half the screen.
 
-**You do:** use it yourself. If the loop is slower than 30 seconds or the preview is wrong, say so in the pull request. That blocks M3.
+The free path that shows a preview in under 30 seconds is in this milestone. WYSIWYG stays in M4. CI does not install the app on a phone or a tablet.
+
+**You do:** use this pull request on an iPhone, an Android phone, and an Android tablet emulator. If the loop is slower than 30 seconds, the preview is wrong, or the tablet layout breaks, say so. That blocks M3.
 
 ### M3 — First signed builds, and the Play clock starts
 

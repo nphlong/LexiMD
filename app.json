@@ -3,7 +3,8 @@
     "name": "LexiMD",
     "slug": "leximd",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
+    "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
     "ios": {
       "supportsTablet": true,
@@ -21,7 +22,9 @@
     },
     "plugins": [
       "expo-status-bar",
-      "expo-asset"
+      "expo-asset",
+      "expo-sharing",
+      "expo-localization"
     ]
   }
 }

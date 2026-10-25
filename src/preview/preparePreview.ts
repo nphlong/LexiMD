@@ -3,6 +3,7 @@ import { Directory, File, Paths } from 'expo-file-system';
 
 import { PREVIEW_BUNDLE_VERSION } from './generated/previewVersion';
 import mermaidAsset from '../../assets/preview/mermaid.min.mermaidjs';
+import { Scheme } from '../settings/settings';
 import { previewShell, PreviewMessages } from './previewShell';
 
 export type PreviewFiles = {
@@ -14,7 +15,10 @@ function withSlash(uri: string): string {
   return uri.endsWith('/') ? uri : `${uri}/`;
 }
 
-export async function preparePreviewFiles(messages: PreviewMessages): Promise<PreviewFiles> {
+export async function preparePreviewFiles(
+  messages: PreviewMessages,
+  theme: Scheme = 'light',
+): Promise<PreviewFiles> {
   const directory = new Directory(Paths.document, 'preview');
   if (!directory.exists) {
     directory.create();
@@ -37,6 +41,6 @@ export async function preparePreviewFiles(messages: PreviewMessages): Promise<Pr
   }
 
   const htmlFile = new File(directory, 'index.html');
-  await htmlFile.write(previewShell(messages));
+  await htmlFile.write(previewShell(messages, theme));
   return { htmlUri: htmlFile.uri, readAccessUri: withSlash(directory.uri) };
 }

@@ -1,3 +1,5 @@
+import { Scheme } from '../settings/settings';
+
 export type PreviewMessages = {
   diagramError: string;
   previewFailed: string;
@@ -7,17 +9,21 @@ function embed(value: string): string {
   return JSON.stringify(value).replace(/</g, '\\u003c');
 }
 
-export function previewShell(messages: PreviewMessages): string {
+export function previewShell(messages: PreviewMessages, theme: Scheme = 'light'): string {
   const diagramError = embed(messages.diagramError);
   const previewFailed = embed(messages.previewFailed);
+  const initial = theme === 'dark' ? 'dark' : 'light';
+  const mermaidTheme = initial === 'dark' ? 'dark' : 'default';
   return `<!DOCTYPE html>
-<html>
+<html data-theme="${initial}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval' file:; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; connect-src 'none'; object-src 'none'; frame-src 'none';">
 <style>
-  html, body { margin: 0; background: #fff; color: #111; }
+  :root { --bg: #fff; --text: #111; --error-bg: #fff4f4; --error: #8a1f1f; --link: #111; }
+  :root[data-theme="dark"] { --bg: #111; --text: #f5f5f5; --error-bg: #3a1d1d; --error: #ffb4b4; --link: #f5f5f5; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
   body { font: 18px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; padding: 16px 16px 32px; }
   h1 { font-size: 28px; line-height: 1.25; }
   h2 { font-size: 22px; line-height: 1.3; }
@@ -25,19 +31,20 @@ export function previewShell(messages: PreviewMessages): string {
   pre { white-space: pre-wrap; }
   pre.leximd-diagram { margin: 16px 0; overflow-x: auto; }
   pre.leximd-diagram svg { max-width: 100%; height: auto; }
-  pre.leximd-diagram-error { background: #fff4f4; color: #8a1f1f; padding: 12px; border-radius: 8px; }
+  pre.leximd-diagram-error { background: var(--error-bg); color: var(--error); padding: 12px; border-radius: 8px; }
   pre.leximd-diagram-error strong, pre.leximd-diagram-error span { display: block; }
   pre.leximd-diagram-error span { margin-top: 6px; font-weight: 400; }
   img { max-width: 100%; }
-  a { color: #111; }
+  a { color: var(--link); }
 </style>
 </head>
 <body>
 <div id="doc"></div>
 <script src="mermaid.min.js"></script>
 <script>
-  const diagramError = ${diagramError};
-  const previewFailed = ${previewFailed};
+  let diagramError = ${diagramError};
+  let previewFailed = ${previewFailed};
+  let mermaidTheme = '${mermaidTheme}';
   const cache = new Map();
   let generation = 0;
   let sequence = 0;
@@ -55,9 +62,29 @@ export function previewShell(messages: PreviewMessages): string {
     pre.className = 'leximd-diagram-error';
   }
 
+  function applyTheme(next) {
+    const value = next === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', value);
+    const wanted = value === 'dark' ? 'dark' : 'default';
+    if (wanted === mermaidTheme || typeof mermaid === 'undefined') {
+      mermaidTheme = wanted;
+      return;
+    }
+    mermaidTheme = wanted;
+    cache.clear();
+    try {
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        suppressErrorRendering: true,
+        theme: mermaidTheme,
+      });
+    } catch (error) {}
+  }
+
   async function draw(pre, source) {
     const width = document.documentElement.clientWidth || 0;
-    const key = width + '\\n' + source;
+    const key = mermaidTheme + '\\n' + width + '\\n' + source;
     const cached = cache.get(key);
     if (cached) {
       if (cached.ok) {
@@ -105,7 +132,12 @@ export function previewShell(messages: PreviewMessages): string {
     }
   }
 
-  window.renderHtml = function (html) {
+  window.renderHtml = function (html, options) {
+    if (options && typeof options === 'object') {
+      if (typeof options.diagramError === 'string') diagramError = options.diagramError;
+      if (typeof options.previewFailed === 'string') previewFailed = options.previewFailed;
+      if (options.theme === 'dark' || options.theme === 'light') applyTheme(options.theme);
+    }
     drawAll(html).catch(function () {
       const doc = document.getElementById('doc');
       if (doc) doc.textContent = previewFailed;
@@ -117,7 +149,7 @@ export function previewShell(messages: PreviewMessages): string {
       startOnLoad: false,
       securityLevel: 'strict',
       suppressErrorRendering: true,
-      theme: 'default',
+      theme: mermaidTheme,
     });
   } catch (error) {
     const doc = document.getElementById('doc');

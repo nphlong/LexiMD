@@ -19,8 +19,18 @@ describe('previewShell', () => {
     expect(html).toContain('suppressErrorRendering: true');
     expect(html).toContain(messages.diagramError);
     expect(html).toContain('window.renderHtml');
+    expect(html).toContain('data-theme');
+    expect(html).toContain("securityLevel: 'strict'");
     expect(html).not.toMatch(/https?:\/\//);
     expect(html).not.toContain('cdn.');
+  });
+
+  test('starts a dark page with the dark mermaid theme', () => {
+    const html = previewShell(messages, 'dark');
+
+    expect(html).toContain('data-theme="dark"');
+    expect(html).toContain("let mermaidTheme = 'dark'");
+    expect(html).toContain("connect-src 'none'");
   });
 });
 

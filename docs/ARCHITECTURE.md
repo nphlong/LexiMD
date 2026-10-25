@@ -34,11 +34,11 @@ flowchart LR
 | Ad verification | Checks the AdMob server-side verification signature and a one-time transaction id, then grants 5 credits. |
 | AI provider | One provider and one cheap model in v1. |
 
-The preview runs inside a WebView because the mermaid and markdown libraries are JavaScript. The WebView loads bundled files, not a CDN. The note is rendered to HTML in the app. The preview page is a file on the phone, next to the mermaid library, and its content security policy blocks network requests. A diagram with a syntax error shows a message in that page. On a screen narrower than 600 points, Write and Preview are a toggle and the preview keeps updating while the user types. A wider screen shows them side by side. WYSIWYG may use a WebView too, if the spike in [PLAN.md](PLAN.md) chooses that. The library, folders, credits, and settings stay native either way.
+The preview runs inside a WebView because the mermaid and markdown libraries are JavaScript. The WebView loads bundled files, not a CDN. The note is rendered to HTML in the app. The preview page is a file on the phone, next to the mermaid library, and its content security policy blocks network requests. A diagram with a syntax error shows a message in that page. The page follows the app's light or dark theme, including the mermaid theme. On a screen narrower than 600 points, Write and Preview are a toggle, folders are a horizontal list, and the preview keeps updating while the user types. A wider screen, including a tablet, shows a folder sidebar and the editor beside the preview. The app rotates. WYSIWYG may use a WebView too, if the spike in [PLAN.md](PLAN.md) chooses that. The library, folders, credits, and settings stay native either way.
 
 ## What is stored where
 
-On the device: note files, folders, tags, and the draft the user is typing. This remains the working copy after sync exists.
+On the device: note files, folders, tags, appearance, language, and the draft the user is typing. This remains the working copy after sync exists. Appearance and language are a sheet on the library. The Settings screen, with account and privacy, is still later.
 
 On the server in v1:
 
