@@ -19,3 +19,7 @@ Start with the plan. It is the document to review.
 | [AGENTS.md](AGENTS.md) | Conventions for coding agents in this repo. |
 
 Owner: Long.
+
+## License
+
+LexiMD is proprietary software. See [LICENSE](LICENSE).

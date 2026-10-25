@@ -22,3 +22,4 @@ LexiMD is in planning. The mobile stack is React Native with Expo, in TypeScript
 - The app does not grant itself credits. A rewarded ad is checked with AdMob server-side verification. A later purchase is checked with the store.
 - Leave features marked cut or deferred in `docs/PLAN.md` out of the build.
 - There is no application project in this repo yet. The first code is M1, as written in `docs/PLAN.md`.
+- Do not add third-party code under a license incompatible with a closed-source mobile app. Record the license of each dependency we add.
