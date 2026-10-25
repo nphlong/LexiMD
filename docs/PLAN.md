@@ -176,7 +176,7 @@ Start the store accounts now, in parallel with M1. Enrollment and the Play close
 
 ### M1 — The app boots on a phone
 
-Stack: React Native with Expo, decided 2026-10-25. The M1 project is Expo SDK 57, from the blank TypeScript template. On 2026-10-25, Expo's create-expo-app docs said that during the SDK 58 transition, Expo Go on a physical phone should use SDK 57, and that `create-expo-app@latest` without a template creates an SDK 57 project. Stay on SDK 57 until a later milestone has a reason to move.
+Stack: React Native with Expo, decided 2026-10-25. The app is Expo SDK 58. M1 started on SDK 57 because, on that day, Expo's create-expo-app docs said Expo Go on a physical phone should use SDK 57 during the SDK 58 transition. The owner's App Store Expo Go is now SDK 58 and cannot open an SDK 57 project, and an older Expo Go cannot be installed on iOS. The app moved to SDK 58 for that reason.
 
 Start with an Expo project in TypeScript. Add lint, tests, and CI that builds on both iOS and Android. The only screen is a hello screen that shows the core-function sentence. No editor, notes, folders, AI, ads, or server in this pull request.
 
@@ -189,7 +189,7 @@ Start with an Expo project in TypeScript. Add lint, tests, and CI that builds on
 
 **Release step covered:** the toolchain, and installing a build while in Vietnam.
 
-**You do:** Install Node.js 22.13 or newer. Open the app on one iPhone and one Android phone and confirm the hello screen shows the core-function sentence. Expo Go is enough. A free Expo account is required for Expo Go on a physical iPhone. A local debug build needs Android Studio, and a Mac with Xcode 26.4 or newer for the iPhone. Steps are in the README. A paid Apple or Google developer account is not required for this check. Start those enrollments in parallel anyway; they are on the critical path for M3.
+**You do:** Install a supported Node.js (22.13 or newer on the 22 line, 24.3 or newer, or 26 and later; not 23 or 25). Open the app on one iPhone and one Android phone and confirm the hello screen shows the core-function sentence. The current Expo Go is enough. A free Expo account is required for Expo Go on a physical iPhone. A local debug build needs Android Studio with Android SDK Platform 37, and a Mac with Xcode 26.4 or newer for the iPhone. Steps are in the README. A paid Apple or Google developer account is not required for this check. Start those enrollments in parallel anyway; they are on the critical path for M3.
 
 ### M2 — Split view works offline
 
